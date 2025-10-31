@@ -1,0 +1,4 @@
+pnpm --filter back-end lint
+pnpm --filter back-end test
+
+pnpm --filter front-end lint
