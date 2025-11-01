@@ -1,0 +1,62 @@
+services:
+  db:
+    image: postgres:18-alpine
+    container_name: basic-project-db
+    environment:
+      POSTGRES_USER: basic-project-dev
+      POSTGRES_PASSWORD: dev
+      POSTGRES_DB: basic-project-dev-database
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  back-end:
+    build:
+      context: .
+      dockerfile: ./packages/back-end/Dockerfile.dev
+    container_name: basic-project-back-end
+    ports:
+      - '3001:3001'
+    develop:
+      watch:
+        - action: sync
+          path: ./packages/back-end
+          target: /usr/src/app/packages/back-end
+          ignore:
+            - node_modules/
+        - action: sync
+          path: ./packages/shared-types
+          target: /usr/src/app/packages/shared-types
+          ignore:
+            - node_modules/
+    environment:
+      - DATABASE_URL=postgres://basic-project-dev:dev@db:5432/basic-project-dev-database
+    depends_on:
+      - db
+    command: pnpm dev --filter back-end
+  front-end:
+    build:
+      context: .
+      dockerfile: ./packages/front-end/Dockerfile.dev
+    container_name: basic-project-front-end
+    ports:
+      - '3000:3000'
+    develop:
+      watch:
+        - action: sync
+          path: ./packages/front-end
+          target: /usr/src/app/packages/front-end
+          ignore:
+            - node_modules/
+        - action: sync
+          path: ./packages/shared-types
+          target: /usr/src/app/packages/shared-types
+          ignore:
+            - node_modules/
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:3001
+    depends_on:
+      - back-end
+    command: pnpm dev --filter front-end
+volumes:
+  postgres_data:
