@@ -1,0 +1,34 @@
+import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { LoginDto } from './dto/login.dto';
+import { JwtAuthGuard } from './jwt-auth.guard';
+import {
+  type AccessRequest,
+  type RefreshRequest,
+} from './interfaces/jwt-payload.interface';
+import { JwtRefreshGuard } from './jwt-refresh.guard';
+
+@Controller('auth')
+export class AuthController {
+  constructor(private readonly authService: AuthService) {}
+
+  @Post('login')
+  async login(@Body() loginDto: LoginDto) {
+    return this.authService.login(loginDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('logout')
+  async logout(@Request() request: AccessRequest) {
+    await this.authService.logout(request.user.id);
+    return { message: 'Logout successful' };
+  }
+
+  @UseGuards(JwtRefreshGuard)
+  @Post('refresh')
+  async refreshTokens(@Request() request: RefreshRequest) {
+    const userId = request.user.id;
+    const refreshToken = request.user.refreshToken;
+    return this.authService.refreshTokens(userId, refreshToken);
+  }
+}

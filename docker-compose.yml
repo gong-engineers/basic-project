@@ -29,6 +29,10 @@ services:
           target: /usr/src/app/packages/shared-types
           ignore:
             - node_modules/
+        - action: rebuild
+          path: ./packages/back-end/package.json
+    env_file:
+      - ./packages/back-end/.env
     environment:
       - DATABASE_URL=postgres://basic-project-dev:dev@db:5432/basic-project-dev-database
     depends_on:
@@ -53,6 +57,8 @@ services:
           target: /usr/src/app/packages/shared-types
           ignore:
             - node_modules/
+        - action: rebuild
+          path: ./packages/front-end/package.json
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:3001
     depends_on:
