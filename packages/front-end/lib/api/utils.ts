@@ -54,7 +54,7 @@ export const client = {
 };
 
 export async function handleAPI(
-  apiCall: () => Promise<NextResponse>
+  apiCall: () => Promise<NextResponse>,
 ): Promise<NextResponse> {
   try {
     return await apiCall();
@@ -62,12 +62,12 @@ export async function handleAPI(
     if (error instanceof APIError) {
       return NextResponse.json(
         { error: error.message },
-        { status: error.status }
+        { status: error.status },
       );
     }
     return NextResponse.json(
       { error: 'Internal Server Error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
