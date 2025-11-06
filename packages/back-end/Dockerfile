@@ -6,8 +6,8 @@ WORKDIR /usr/src/app
 # Dependencies Stage And Build Stage
 FROM base As dependenciesAndBuild
 COPY pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY packages/back-end/package.json ./packages/back-end/
 COPY packages/shared-types/package.json ./packages/shared-types/
+COPY packages/back-end/package.json ./packages/back-end/
 RUN pnpm fetch && pnpm install --frozen-lockfile
 
 COPY packages/back-end/ ./packages/back-end/
