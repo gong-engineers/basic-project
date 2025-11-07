@@ -1,5 +1,5 @@
 export interface ResponseDto<T> {
   statusCode: number;
-  statusMessage: String;
+  statusMessage: string;
   data: T;
 }

@@ -1,4 +1,4 @@
-export * from './auth';
-export * from './user';
-export * from './cart';
-export * from './common';
+export * as auth from './auth';
+export * as user from './user';
+export * as cart from './cart';
+export * as common from './common';

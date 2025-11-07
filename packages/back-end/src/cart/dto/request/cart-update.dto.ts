@@ -1,8 +1,8 @@
-import { CartUpdateRequest } from '@basic-project/shared-types';
+import { cart } from '@basic-project/shared-types';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-export class CartUpdateDto implements CartUpdateRequest {
+export class CartUpdateDto implements cart.CartUpdateRequest {
   @ApiProperty({ description: '장바구니 ID' })
   @IsNotEmpty()
   @IsNumber()

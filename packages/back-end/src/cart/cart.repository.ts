@@ -34,14 +34,19 @@ export class CartRepositoryImpl implements CartRepository {
   // 장바구니 리스트 조회
   async findAll(memberId: number): Promise<Cart[]> {
     return await Promise.resolve(
-      this.cartRepository.find({ where: { memberId } }),
+      this.cartRepository.find({
+        where: { member: { id: memberId } },
+      }),
     );
   }
 
   // 특정 장바구니 상세 조회
   async findById(cartId: number): Promise<Cart> {
     return (await Promise.resolve(
-      this.cartRepository.findOneBy({ cartId }),
+      this.cartRepository.findOne({
+        where: { cartId: cartId },
+        relations: ['member'],
+      }),
     )) as Cart;
   }
 

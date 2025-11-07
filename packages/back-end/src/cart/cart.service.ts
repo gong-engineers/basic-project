@@ -53,13 +53,13 @@ export class CartService {
         optionName: cartInDto.optionName,
         optionPrice: cartInDto.optionPrice,
         totalPrice: cartInDto.totalPrice,
-        memberId: user.id,
+        member: user,
         createdAt: new Date(),
         updatedAt: new Date(),
       } as Cart);
 
       // 장바구니 데이터 저장
-      this.cartRepository.save(cart);
+      await this.cartRepository.save(cart);
 
       // 장바구니 데이터 저장
       return ResponseDto.success('장바구니 담기 성공', null);
@@ -116,9 +116,16 @@ export class CartService {
       const cart = await this.cartRepository.findById(cartUpdateDto.cartId);
 
       // 수정하고자 하는 장바구니가 없거나 로그인한 유저가 가진 장바구니가 아니면 권한 거절
-      if (!cart || cart.memberId != user.id) {
+      if (!cart || cart.member.id != user.id) {
+        console.log('cart : ' + cart.categoryName);
+        console.log(
+          '장바구니에 등록된 회원 ID : ' +
+            cart.member.id +
+            ' 로그인한 유저 ID : ' +
+            user.id,
+        );
         this.logger.warn(
-          `Cart not found with ID: ${cartUpdateDto.cartId} or not user's cart`,
+          `Cart not found with ID: ${cartUpdateDto.cartId} or not user ${user.id}'s cart`,
         );
         throw new NotFoundException('Cart not found');
       }
@@ -164,7 +171,7 @@ export class CartService {
       const cart = await this.cartRepository.findById(cartId);
 
       // 삭제하고자 하는 장바구니가 없거나 로그인한 유저가 가진 장바구니가 아니면 권한 거절
-      if (!cart || cart.memberId != user.id) {
+      if (!cart || cart.member.id != user.id) {
         this.logger.warn(
           `Cart not found with ID: ${cartId} or not user's cart`,
         );

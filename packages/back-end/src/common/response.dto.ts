@@ -1,25 +1,25 @@
-import { ResponseDto as SharedResponseDto } from '@basic-project/shared-types';
+import type { common } from '@basic-project/shared-types';
 
-export class ResponseDto<T> implements SharedResponseDto<T> {
+export class ResponseDto<T> implements common.ResponseDto<T> {
   statusCode: number;
-  statusMessage: String;
+  statusMessage: string;
   data: T;
 
-  constructor(statusCode: number, statusMessage: String, data: T) {
+  constructor(statusCode: number, statusMessage: string, data: T) {
     this.statusCode = statusCode;
     this.statusMessage = statusMessage;
     this.data = data;
   }
 
   // 성공 시 반환 형태
-  static success<T>(statusMessage: String, data: T): ResponseDto<T> {
+  static success<T>(statusMessage: string, data: T): ResponseDto<T> {
     return new ResponseDto(200, statusMessage, data);
   }
 
   // 실패 시 반환 형태
   static error<T>(
     statusCode: number,
-    statusMessage: String,
+    statusMessage: string,
     data: T,
   ): ResponseDto<T> {
     return new ResponseDto(statusCode, statusMessage, data);

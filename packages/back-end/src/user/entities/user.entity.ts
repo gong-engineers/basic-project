@@ -4,7 +4,9 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
+import { Cart } from '../../cart/entities/cart.entity';
 
 @Entity('users')
 export class User {
@@ -25,4 +27,7 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => Cart, (cart) => cart.member)
+  carts: Cart[];
 }

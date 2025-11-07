@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 
-@Index('idx_cart_member_id', ['memberId'])
+@Index('idx_cart_member_id', ['member'])
 @Entity('carts')
 export class Cart {
   @PrimaryGeneratedColumn()
@@ -104,16 +104,16 @@ export class Cart {
   })
   totalPrice: number;
 
-  @ManyToOne(() => User, (user) => user.id, {
+  @ManyToOne(() => User, (user) => user.carts, {
     onDelete: 'CASCADE',
     eager: false,
   })
   @JoinColumn({
-    name: 'memberId',
+    name: 'member_id',
     foreignKeyConstraintName: 'fk_cart_member_id',
     referencedColumnName: 'id',
   })
-  memberId: number;
+  member: User;
 
   @Column({
     type: 'timestamp',
