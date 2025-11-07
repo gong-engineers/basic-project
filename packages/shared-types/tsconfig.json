@@ -2,13 +2,6 @@
   "compilerOptions": {
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true,
-    "rootDir": "src",
-    "outDir": "dist",
-    "declaration": true,
-    "module": "commonjs",
-    "target": "ES2023",
-    "moduleResolution": "node"
-  },
-  "include": ["src"]
+    "skipLibCheck": true
+  }
 }

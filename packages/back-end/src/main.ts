@@ -1,3 +1,8 @@
+import {
+  initializeTransactionalContext,
+  addTransactionalDataSource,
+} from 'typeorm-transactional';
+import { DataSource } from 'typeorm';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -6,6 +11,9 @@ import * as winston from 'winston';
 import 'winston-daily-rotate-file';
 
 async function bootstrap() {
+  // 트랜잭션 컨텍스트 초기화
+  initializeTransactionalContext();
+
   const app = await NestFactory.create(AppModule, {
     logger: WinstonModule.createLogger({
       transports: [
@@ -33,6 +41,12 @@ async function bootstrap() {
       ],
     }),
   });
+
+  // Nest가 관리하는 TypeORM DataSource 인스턴스 주입
+  const dataSource = app.get(DataSource);
+
+  // 트랜잭션 관리 매니저에 등록
+  addTransactionalDataSource(dataSource);
 
   if (process.env.NODE_ENV !== 'production') {
     const config = new DocumentBuilder()

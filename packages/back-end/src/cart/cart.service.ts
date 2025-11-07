@@ -7,7 +7,7 @@ import { CartRepository, CartRepositoryImpl } from './cart.repository';
 import type { AccessRequest } from '../auth/interfaces/jwt-payload.interface';
 import { UserService } from '../user/user.service';
 import { UnauthorizedException, NotFoundException } from '@nestjs/common';
-import { common } from '@basic-project/shared-types';
+import { ResponseDto } from '../common/response.dto';
 import { CartUpdateDto } from './dto/request/cart-update.dto';
 
 @Injectable()
@@ -62,7 +62,7 @@ export class CartService {
       this.cartRepository.save(cart);
 
       // 장바구니 데이터 저장
-      return common.ResponseDto.success('장바구니 담기 성공', null);
+      return ResponseDto.success('장바구니 담기 성공', null);
     } catch (error) {
       this.logger.error(`Error cartIn: ${error}`);
       throw new InternalServerErrorException('장바구니 담기 실패');
@@ -88,7 +88,7 @@ export class CartService {
       // 로그인한 유저의 장바구니 리스트 조회
       const cartList = await this.cartRepository.findAll(user.id);
 
-      return common.ResponseDto.success('장바구니 리스트 조회 성공', cartList);
+      return ResponseDto.success('장바구니 리스트 조회 성공', cartList);
     } catch (error) {
       this.logger.error(`Error cartList: ${error}`);
       throw new InternalServerErrorException('장바구니 리스트 조회 실패');
@@ -136,7 +136,7 @@ export class CartService {
       // 수정한 장바구니 내용 저장
       await this.cartRepository.update(cart);
 
-      return common.ResponseDto.success('장바구니 수정 성공', null);
+      return ResponseDto.success('장바구니 수정 성공', null);
     } catch (error) {
       this.logger.error(`Error CartUpdate: ${error}`);
       throw new InternalServerErrorException('장바구니 수정 실패');
@@ -181,7 +181,7 @@ export class CartService {
         throw new NotFoundException('Cart not found');
       }
 
-      return common.ResponseDto.success('장바구니 삭제 성공', null);
+      return ResponseDto.success('장바구니 삭제 성공', null);
     } catch (error) {
       this.logger.error(`Error CartDelete: ${error}`);
       throw new InternalServerErrorException('장바구니 삭제 실패');

@@ -1,3 +1,5 @@
-import { ResponseDto } from "./response.dto.js";
-
-export { ResponseDto };
+export interface ResponseDto<T> {
+  statusCode: number;
+  statusMessage: String;
+  data: T;
+}

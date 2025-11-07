@@ -1,8 +1,8 @@
-import { user } from '@basic-project/shared-types';
+import { CreateUserRequest } from '@basic-project/shared-types';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
-export class CreateUserDto implements user.CreateUserRequest {
+export class CreateUserDto implements CreateUserRequest {
   @ApiProperty({
     description: 'User email address',
     uniqueItems: true,

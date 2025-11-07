@@ -1,4 +1,6 @@
-export class ResponseDto<T> {
+import { ResponseDto as SharedResponseDto } from '@basic-project/shared-types';
+
+export class ResponseDto<T> implements SharedResponseDto<T> {
   statusCode: number;
   statusMessage: String;
   data: T;
@@ -18,7 +20,7 @@ export class ResponseDto<T> {
   static error<T>(
     statusCode: number,
     statusMessage: String,
-    data: T
+    data: T,
   ): ResponseDto<T> {
     return new ResponseDto(statusCode, statusMessage, data);
   }

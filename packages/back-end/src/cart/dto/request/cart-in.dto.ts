@@ -1,8 +1,8 @@
-import { cart } from '@basic-project/shared-types';
+import { CartInRequest } from '@basic-project/shared-types';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-export class CartInDto implements cart.CartInRequest {
+export class CartInDto implements CartInRequest {
   @ApiProperty({
     description: '장바구니 제품 카테고리 ID',
   })
