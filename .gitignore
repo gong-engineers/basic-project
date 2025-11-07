@@ -1,9 +1,12 @@
-/node_modules
+node_modules
 
 .env
 .env.local
 
 .turbo
+
+# Build Outputs
+dist
 
 # OS & IDE & Editors
 .DS_Store

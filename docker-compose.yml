@@ -31,13 +31,15 @@ services:
             - node_modules/
         - action: rebuild
           path: ./packages/back-end/package.json
+        - action: rebuild
+          path: ./packages/shared-types/package.json
     env_file:
       - ./packages/back-end/.env
     environment:
       - DATABASE_URL=postgres://basic-project-dev:dev@db:5432/basic-project-dev-database
     depends_on:
       - db
-    command: pnpm dev --filter back-end
+    command: pnpm dev --filter @basic-project/shared-types --filter back-end
   front-end:
     build:
       context: .
@@ -59,10 +61,12 @@ services:
             - node_modules/
         - action: rebuild
           path: ./packages/front-end/package.json
+        - action: rebuild
+          path: ./packages/shared-types/package.json
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:3001
     depends_on:
       - back-end
-    command: pnpm dev --filter front-end
+    command: pnpm dev --filter @basic-project/shared-types --filter front-end
 volumes:
   postgres_data:
