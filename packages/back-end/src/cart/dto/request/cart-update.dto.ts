@@ -18,7 +18,7 @@ export class CartUpdateDto implements cart.CartUpdateRequest {
   @IsNumber()
   quantity: number;
 
-  @ApiProperty({ description: '장바구니 옵션 유무' })
+  @ApiProperty({ description: '장바구니 옵션 유무', default: 'N' })
   @IsNotEmpty()
   @IsString()
   optionCheck: 'N' | 'Y';
@@ -27,7 +27,7 @@ export class CartUpdateDto implements cart.CartUpdateRequest {
   @IsNumber()
   optionId: number;
 
-  @ApiProperty({ description: '장바구니 옵션 명' })
+  @ApiProperty({ description: '장바구니 옵션 명', default: null })
   @IsString()
   optionName: string | null;
 

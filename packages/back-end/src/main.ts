@@ -9,6 +9,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import 'winston-daily-rotate-file';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   // 트랜잭션 컨텍스트 초기화
@@ -45,8 +46,19 @@ async function bootstrap() {
   // Nest가 관리하는 TypeORM DataSource 인스턴스 주입
   const dataSource = app.get(DataSource);
 
-  // 트랜잭션 관리 매니저에 등록
+  // 트랜잭션 관리 매니저에 등록 (데이터 작업 처리를 진행할 때 무결성과 일관성을 보장하기 위해서 Transactionl을 사용하도록 하였습니다.)
   addTransactionalDataSource(dataSource);
+
+  // CORS 허용
+  app.enableCors({
+    origin: true, // 모든 도메인 허용
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS', 'PUT', 'HEAD'], // CORS 허용할 메소드 설정
+  });
+
+  // 쿠키 정보 활용을 위한 쿠키 파서 미들웨어 등록
+  app.use(cookieParser()); // <- HttpOnly 쿠키에 저장될 RefreshToken을 파싱하기 위해서 사용하였습니다.
 
   if (process.env.NODE_ENV !== 'production') {
     const config = new DocumentBuilder()
