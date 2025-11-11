@@ -1,15 +1,15 @@
-import {
-  initializeTransactionalContext,
-  addTransactionalDataSource,
-} from 'typeorm-transactional';
-import { DataSource } from 'typeorm';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import cookieParser from 'cookie-parser';
 import { WinstonModule } from 'nest-winston';
+import { DataSource } from 'typeorm';
+import {
+  addTransactionalDataSource,
+  initializeTransactionalContext,
+} from 'typeorm-transactional';
 import * as winston from 'winston';
 import 'winston-daily-rotate-file';
-import cookieParser from 'cookie-parser';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   // 트랜잭션 컨텍스트 초기화
@@ -73,4 +73,4 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT ?? 3001);
 }
-bootstrap();
+void bootstrap();
