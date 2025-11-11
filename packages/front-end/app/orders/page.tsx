@@ -258,26 +258,6 @@ export default function Orders() {
           </section>
         </div>
       </div>
-
-      {/* 하단: 결제 페이지 설명 */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-        <div className="bg-pink-50 border border-pink-200 rounded-lg p-6">
-          <div className="flex items-start gap-3">
-            <span className="text-blue-600 text-xl">💳</span>
-            <div>
-              <h4 className="font-bold text-gray-900 mb-2">결제 페이지 설명</h4>
-              <ul className="space-y-1 text-sm text-gray-700">
-                <li>• 로그인한 사용자만 접근 가능</li>
-                <li>• 3단계 결제 프로세스: 배송지 → 배송방법 → 결제</li>
-                <li>• 기존 배송지 선택 또는 새로운 배송지 입력 가능</li>
-                <li>• 배송방법 선택 (일반, 당일 등)</li>
-                <li>• 결제 방법 선택 (신용카드, 계좌이체 등)</li>
-                <li>• 결제 완료 후 주문 확정</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

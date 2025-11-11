@@ -72,7 +72,7 @@ export class CartService {
           totalPrice: cartInDto.totalPrice,
           member: user,
           createdAt: new Date(),
-          updatedAt: null,
+          updatedAt: new Date(),
         } as Cart);
 
         // 장바구니 데이터 저장
