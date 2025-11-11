@@ -8,6 +8,8 @@ import configuration from './config/configuration';
 import { validationSchema } from './config/validation.schema';
 import { UserModule } from './user/user.module';
 import { CartModule } from './cart/cart.module';
+import { OrderModule } from './order/order.module';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { CartModule } from './cart/cart.module';
     AuthModule,
     UserModule,
     CartModule,
+    OrderModule,
+    PaymentModule,
   ],
   controllers: [],
   providers: [],

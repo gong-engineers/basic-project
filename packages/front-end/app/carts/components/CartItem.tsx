@@ -7,12 +7,16 @@ interface CartItemProps {
   item: cart.CartInfoResponse;
   onQuantityChange: (cartId: number, newQuantity: number) => void;
   onDelete: (cartId: number) => void;
+  isSelected: boolean;
+  onToggleSelect: (cartId: number) => void;
 }
 
 export default function CartItem({
   item,
   onQuantityChange,
   onDelete,
+  isSelected,
+  onToggleSelect,
 }: CartItemProps) {
   // 수량 변경 핸들러
   const handleQuantityChange = async (type: 'increase' | 'decrease') => {
@@ -89,6 +93,16 @@ export default function CartItem({
         />
         <input type="hidden" value={item.optionPrice} />
         <input type="hidden" value={item.totalPrice} />
+
+        {/* 체크박스 */}
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={() => onToggleSelect(item.cartId)}
+            className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
+          />
+        </div>
 
         {/* 상품 이미지 */}
         <div className="w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center bg-gray-100 rounded-lg flex-shrink-0">

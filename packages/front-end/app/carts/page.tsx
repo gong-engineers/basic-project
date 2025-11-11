@@ -13,6 +13,7 @@ interface LoginResponse {
 
 export default function Carts() {
   const [cartList, setCartList] = useState<cart.CartInfoResponse[]>([]); // 장바구니 리스트 상태 관리
+  const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set()); // 선택된 아이템의 cartId를 저장
   const router = useRouter(); // 페이지 이동을 위한 router 선언
   const [isLoading, setIsLoading] = useState(false); // 이미 렌더링된 상태에서 장바구니 리스트 조회를 위한 로딩 상태 관리 (또 반복적으로 렌더링되는 것을 방지하기 위한 state)
 
@@ -76,6 +77,47 @@ export default function Carts() {
     setCartList((prevList) =>
       prevList.filter((item) => item.cartId !== cartId),
     );
+    // 선택된 항목에서도 제거
+    setSelectedItems((prev) => {
+      const newSet = new Set(prev);
+      newSet.delete(cartId);
+      return newSet;
+    });
+  };
+
+  // 체크박스 토글 핸들러
+  const handleToggleSelect = (cartId: number) => {
+    setSelectedItems((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(cartId)) {
+        newSet.delete(cartId);
+      } else {
+        newSet.add(cartId);
+      }
+      return newSet;
+    });
+  };
+
+  // 결제하기 버튼 핸들러
+  const handleCheckout = () => {
+    if (selectedItems.size === 0) {
+      alert('결제할 상품을 선택해주세요.');
+      return;
+    }
+
+    // 선택된 아이템들의 데이터 추출
+    const selectedCartItems = cartList.filter((item) =>
+      selectedItems.has(item.cartId),
+    );
+
+    // 선택된 아이템 데이터를 세션 스토리지에 저장
+    sessionStorage.setItem(
+      'selectedCartItems',
+      JSON.stringify(selectedCartItems),
+    );
+
+    // 주문 페이지로 이동
+    router.push('/orders');
   };
 
   // 총 금액 계산
@@ -114,6 +156,8 @@ export default function Carts() {
                       item={item}
                       onQuantityChange={handleQuantityChange}
                       onDelete={deleteCart}
+                      isSelected={selectedItems.has(item.cartId)}
+                      onToggleSelect={handleToggleSelect}
                     />
                   );
                 })
@@ -163,7 +207,10 @@ export default function Carts() {
 
               {/* 버튼 영역 */}
               <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
-                <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 sm:py-3 px-4 rounded-lg flex items-center justify-center gap-2 text-sm sm:text-base">
+                <button
+                  onClick={handleCheckout}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 sm:py-3 px-4 rounded-lg flex items-center justify-center gap-2 text-sm sm:text-base"
+                >
                   결제하기 →
                 </button>
                 <button

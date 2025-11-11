@@ -9,6 +9,12 @@ export interface CartRepository {
   save(cart: Cart): Promise<Cart>;
   findAll(memberId: number): Promise<Cart[]>;
   findById(cartId: number): Promise<Cart>;
+  findByProductIdAndOptionId(
+    memberId: number,
+    productId: number,
+    optionCheck: string,
+    optionId: number,
+  ): Promise<Cart>;
   update(cart: Cart): Promise<Cart>;
   delete(cartId: number): Promise<DeleteResult>;
 }
@@ -46,6 +52,25 @@ export class CartRepositoryImpl implements CartRepository {
       this.cartRepository.findOne({
         where: { cartId: cartId },
         relations: ['member'],
+      }),
+    )) as Cart;
+  }
+
+  // 기존 동일 장바구니 데이터 존재 확인
+  async findByProductIdAndOptionId(
+    memberId: number,
+    productId: number,
+    optionCheck: string,
+    optionId: number,
+  ): Promise<Cart> {
+    return (await Promise.resolve(
+      this.cartRepository.findOne({
+        where: {
+          member: { id: memberId },
+          productId: productId,
+          optionCheck: optionCheck,
+          optionId: optionId,
+        },
       }),
     )) as Cart;
   }

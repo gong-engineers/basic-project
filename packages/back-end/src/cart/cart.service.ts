@@ -25,6 +25,7 @@ export class CartService {
   }
 
   // 장바구니 담기 service
+  @Transactional()
   async cartIn(request: AccessRequest, cartInDto: CartInDto) {
     this.logger.log(`[CartService] 장바구니 담기`);
 
@@ -40,26 +41,43 @@ export class CartService {
         throw new UnauthorizedException('Access denied');
       }
 
-      // 로그인 유저 정보와 장바구니 담기 정보를 바탕으로 장바구니 데이터 생성
-      const cart = await this.cartRepository.create({
-        categoryId: cartInDto.categoryId,
-        categoryName: cartInDto.categoryName,
-        productId: cartInDto.productId,
-        productName: cartInDto.productName,
-        price: cartInDto.price,
-        quantity: cartInDto.quantity,
-        optionCheck: cartInDto.optionCheck,
-        optionId: cartInDto.optionId,
-        optionName: cartInDto.optionName,
-        optionPrice: cartInDto.optionPrice,
-        totalPrice: cartInDto.totalPrice,
-        member: user,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      } as Cart);
+      // 이미 이전에 같은 옵션 혹은 같은 제품을 장바구니에 담았다면 해당 장바구니 데이터를 업데이트
+      const existingCart = await this.cartRepository.findByProductIdAndOptionId(
+        user.id,
+        cartInDto.productId,
+        cartInDto.optionCheck,
+        cartInDto.optionId,
+      );
 
-      // 장바구니 데이터 저장
-      await this.cartRepository.save(cart);
+      // 이전에 존재했던 동일한 장바구니 제품이면 기존 데이터를 업데이트 처리
+      if (existingCart) {
+        existingCart.quantity += cartInDto.quantity;
+        existingCart.totalPrice += cartInDto.totalPrice;
+        existingCart.updatedAt = new Date();
+        await this.cartRepository.update(existingCart);
+      } else {
+        // 기존에 없던 새로운 장바구니 데이터일 경우 새롭게 생성
+        // 로그인 유저 정보와 장바구니 담기 정보를 바탕으로 장바구니 데이터 생성
+        const cart = await this.cartRepository.create({
+          categoryId: cartInDto.categoryId,
+          categoryName: cartInDto.categoryName,
+          productId: cartInDto.productId,
+          productName: cartInDto.productName,
+          price: cartInDto.price,
+          quantity: cartInDto.quantity,
+          optionCheck: cartInDto.optionCheck,
+          optionId: cartInDto.optionId,
+          optionName: cartInDto.optionName,
+          optionPrice: cartInDto.optionPrice,
+          totalPrice: cartInDto.totalPrice,
+          member: user,
+          createdAt: new Date(),
+          updatedAt: null,
+        } as Cart);
+
+        // 장바구니 데이터 저장
+        await this.cartRepository.save(cart);
+      }
 
       // 장바구니 데이터 저장
       return ResponseDto.success('장바구니 담기 성공', null);
