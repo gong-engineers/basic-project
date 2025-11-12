@@ -13,12 +13,19 @@ export class APIError extends Error {
 }
 
 async function request<T>(url: string, options: RequestInit = {}): Promise<T> {
+  // GET, HEAD일 경우 body 제거
+  const { method = 'GET', ...rest } = options;
+  const safeOptions: RequestInit =
+    method === 'GET' || method === 'HEAD'
+      ? { ...rest, method } // body 제거
+      : options;
+
   const response = await fetch(url, {
     headers: {
       'Content-Type': 'application/json',
       ...options.headers,
     },
-    ...options,
+    ...safeOptions,
   });
 
   if (!response.ok) {
@@ -35,10 +42,12 @@ export const client = {
       method: 'GET',
       cache: 'no-store',
       ...options,
-      body: JSON.stringify(body),
+      // body: JSON.stringify(body),
     }),
   post: <T, U>(url: string, body: T, options: RequestInit = {}) =>
     request<U>(url, { method: 'POST', ...options, body: JSON.stringify(body) }),
+  put: <T, U>(url: string, body: T, options: RequestInit = {}) =>
+    request<U>(url, { method: 'PUT', ...options, body: JSON.stringify(body) }),
   patch: <T, U>(url: string, body: T, options: RequestInit = {}) =>
     request<U>(url, {
       method: 'PATCH',

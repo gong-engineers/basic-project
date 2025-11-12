@@ -8,6 +8,7 @@ FROM base AS dependencies_and_build
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json turbo.json ./
 COPY packages/back-end/package.json ./packages/back-end/
 COPY packages/shared-types/package.json ./packages/shared-types/
+COPY packages/back-end/package.json ./packages/back-end/
 RUN pnpm fetch && pnpm install --frozen-lockfile
 
 COPY packages/back-end/ ./packages/back-end/

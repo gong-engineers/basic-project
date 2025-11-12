@@ -3,8 +3,9 @@ RUN npm install -g pnpm
 WORKDIR /usr/src/app
 
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json turbo.json ./
-COPY packages/front-end/package.json ./packages/front-end/
 COPY packages/shared-types/package.json ./packages/shared-types/
+COPY packages/front-end/package.json ./packages/front-end/
+
 
 RUN pnpm install
 

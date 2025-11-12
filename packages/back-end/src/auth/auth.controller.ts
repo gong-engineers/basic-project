@@ -1,4 +1,11 @@
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Request,
+  UseGuards,
+  Res,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
@@ -7,14 +14,27 @@ import {
   type RefreshRequest,
 } from './interfaces/jwt-payload.interface';
 import { JwtRefreshGuard } from './jwt-refresh.guard';
+import type { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  async login(@Body() loginDto: LoginDto) {
-    return this.authService.login(loginDto);
+  async login(@Body() loginDto: LoginDto, @Res() response: Response) {
+    const { accessToken, refreshToken } =
+      await this.authService.login(loginDto);
+
+    // refreshToken은 HttpOnly 쿠키로 저장
+    response.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      path: '/',
+      sameSite: 'lax',
+      maxAge: 1000 * 60 * 60 * 24 * 30, // 2주
+    });
+
+    return response.json({ accessToken });
   }
 
   @UseGuards(JwtAuthGuard)

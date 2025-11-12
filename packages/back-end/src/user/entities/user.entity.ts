@@ -4,7 +4,11 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
+import { Cart } from '../../cart/entities/cart.entity';
+import { Order } from '../../order/entities/order.entity';
+import { PaymentMethod } from '../../payment/entities/payment.entity';
 
 @Entity('users')
 export class User {
@@ -25,4 +29,13 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => Cart, (cart) => cart.member)
+  carts: Cart[];
+
+  @OneToMany(() => Order, (order) => order.member)
+  orders: Order[];
+
+  @OneToMany(() => PaymentMethod, (paymentMethod) => paymentMethod.member)
+  paymentMethods: PaymentMethod[];
 }

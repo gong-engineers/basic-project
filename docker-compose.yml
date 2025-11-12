@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: dev
       POSTGRES_DB: basic-project-dev-database
     ports:
-      - '5432:5432'
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
   back-end:
@@ -16,7 +16,7 @@ services:
       dockerfile: ./packages/back-end/Dockerfile.dev
     container_name: basic-project-back-end
     ports:
-      - '3001:3001'
+      - "3001:3001"
     develop:
       watch:
         - action: sync
@@ -46,7 +46,7 @@ services:
       dockerfile: ./packages/front-end/Dockerfile.dev
     container_name: basic-project-front-end
     ports:
-      - '3000:3000'
+      - "3000:3000"
     develop:
       watch:
         - action: sync
