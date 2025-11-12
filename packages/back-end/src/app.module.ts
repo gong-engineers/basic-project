@@ -4,12 +4,13 @@ import { DatabaseModule } from './database/database.module';
 
 // Config imports
 import { ConfigModule } from '@nestjs/config';
+import { CartModule } from './cart/cart.module';
 import configuration from './config/configuration';
 import { validationSchema } from './config/validation.schema';
-import { UserModule } from './user/user.module';
-import { CartModule } from './cart/cart.module';
 import { OrderModule } from './order/order.module';
 import { PaymentModule } from './payment/payment.module';
+import { ProductModule } from './product/product.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { PaymentModule } from './payment/payment.module';
     DatabaseModule,
     AuthModule,
     UserModule,
+    ProductModule,
     CartModule,
     OrderModule,
     PaymentModule,
