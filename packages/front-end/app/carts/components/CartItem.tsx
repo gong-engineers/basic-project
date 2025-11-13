@@ -8,7 +8,12 @@ interface CartItemProps {
   onQuantityChange: (cartId: number, newQuantity: number) => void;
   onDelete: (cartId: number) => void;
   isSelected: boolean;
-  onToggleSelect: (cartId: number) => void;
+  onToggleSelect: (
+    cartId: number,
+    price: number,
+    optionPrice: number,
+    quantity: number,
+  ) => () => void;
 }
 
 export default function CartItem({
@@ -99,7 +104,12 @@ export default function CartItem({
           <input
             type="checkbox"
             checked={isSelected}
-            onChange={() => onToggleSelect(item.cartId)}
+            onChange={onToggleSelect(
+              item.cartId,
+              item.price,
+              item.optionPrice,
+              item.quantity,
+            )}
             className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
           />
         </div>
