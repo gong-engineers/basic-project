@@ -1,5 +1,12 @@
-import { type Category, Categories } from '@basic-project/shared-types/product';
-import { IsArray, IsIn, IsNumber, IsOptional, IsString } from 'class-validator';
+import { type Category, Categories } from '@basic-project/shared-types/item';
+import {
+  IsArray,
+  IsIn,
+  IsISO8601,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateProductDto {
   @IsString()
@@ -21,11 +28,11 @@ export class CreateProductDto {
   discountPrice?: number;
 
   @IsOptional()
-  @IsString()
+  @IsISO8601()
   discountStartDate?: string | null;
 
   @IsOptional()
-  @IsString()
+  @IsISO8601()
   discountEndDate?: string | null;
 
   @IsOptional()

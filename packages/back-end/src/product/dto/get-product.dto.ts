@@ -1,4 +1,4 @@
-import { type Category, Categories } from '@basic-project/shared-types/product';
+import { type Category, Categories } from '@basic-project/shared-types/item';
 import { IsIn, IsOptional, IsString } from 'class-validator';
 
 export class GetProductDto {

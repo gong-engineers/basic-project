@@ -5,7 +5,7 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js",
-    "./product": "./dist/product/index.js"
+    "./item": "./dist/item/index.js"
   },
   "scripts": {
     "dev": "pnpm build --watch",
