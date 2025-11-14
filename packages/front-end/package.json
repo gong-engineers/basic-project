@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@basic-project/shared-types": "workspace:*",
+    "@types/lodash-es": "^4.17.12",
+    "lodash-es": "^4.17.21",
     "next": "16.0.1",
     "react": "19.2.0",
     "react-dom": "19.2.0"

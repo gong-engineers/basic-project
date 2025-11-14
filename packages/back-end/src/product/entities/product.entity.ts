@@ -1,4 +1,4 @@
-import { Categories, type Category } from '@basic-project/shared-types/product';
+import { Categories, type Category } from '@basic-project/shared-types/item';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('products')
