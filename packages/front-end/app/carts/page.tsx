@@ -32,24 +32,6 @@ export default function Carts() {
         setCartList(cartListResponse.data);
       } catch (err) {
         console.error('장바구니 조회 실패:', err);
-
-        const refreshlogin = (await client.post(
-          'http://localhost:3001/auth/refresh',
-          {
-            mode: 'cors',
-            credentials: 'include',
-          },
-        )) as common.ResponseDto<{ accessToken: string }>;
-
-        // 로그인 후 AccessToken을 localstorage에 저장
-        localStorage.setItem(
-          'accessToken',
-          'Bearer ' + refreshlogin.data.accessToken,
-        );
-
-        router.refresh();
-
-        console.log(localStorage.getItem('accessToken'));
       } finally {
         setIsLoading(false); // 로딩 종료 (성공/실패 상관없이)
       }

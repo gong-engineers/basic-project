@@ -6,10 +6,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Order } from './entities/order.entity';
 import { UserModule } from '../user/user.module';
 import { PaymentModule } from '../payment/payment.module';
+import { CartModule } from '../cart/cart.module';
 import { DatabaseInitService } from '../config/database-init.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Order]), UserModule, PaymentModule],
+  imports: [
+    TypeOrmModule.forFeature([Order]),
+    UserModule,
+    PaymentModule,
+    CartModule,
+  ],
   controllers: [OrderController],
   providers: [OrderService, OrderRepositoryImpl, DatabaseInitService],
   exports: [OrderService, OrderRepositoryImpl],

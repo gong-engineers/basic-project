@@ -45,7 +45,7 @@ export class AuthService {
   async refreshTokens(
     userId: number,
     refreshToken: string,
-  ): Promise<{ accessToken: string }> {
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     try {
       const user = await this.userService.findOne(userId);
       if (!user || !user.hashRefreshToken) {
