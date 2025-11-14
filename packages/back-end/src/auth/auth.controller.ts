@@ -15,6 +15,7 @@ import {
 } from './interfaces/jwt-payload.interface';
 import { JwtRefreshGuard } from './jwt-refresh.guard';
 import type { Response } from 'express';
+import { ResponseDto } from '../common/response.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -28,7 +29,7 @@ export class AuthController {
     // refreshToken은 HttpOnly 쿠키로 저장
     response.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === 'production' ? true : false,
       path: '/',
       sameSite: 'lax',
       maxAge: 1000 * 60 * 60 * 24 * 30, // 2주
@@ -46,9 +47,32 @@ export class AuthController {
 
   @UseGuards(JwtRefreshGuard)
   @Post('refresh')
-  async refreshTokens(@Request() request: RefreshRequest) {
+  async refreshTokens(
+    @Request() request: RefreshRequest,
+    @Res() response: Response,
+  ) {
     const userId = request.user.id;
-    const refreshToken = request.user.refreshToken;
-    return this.authService.refreshTokens(userId, refreshToken);
+
+    // 쿠키에 저장된 RefreshToken 가져오기
+    const requestRefreshToken = request.cookies['refreshToken'] as string;
+
+    // RefreshToken과 RefreshRequest의 payload에 저장된 회원 ID를 통해 토큰 재발급
+    const { accessToken, refreshToken } = await this.authService.refreshTokens(
+      userId,
+      requestRefreshToken,
+    );
+
+    // 쿠키에도 새로운 토큰으로 업데이트
+    response.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production' ? true : false,
+      path: '/',
+      sameSite: 'lax',
+      maxAge: 1000 * 60 * 60 * 24 * 30, // 2주
+    });
+
+    return ResponseDto.success('Refresh tokens successful', {
+      accessToken: accessToken,
+    });
   }
 }

@@ -19,7 +19,7 @@ export class Order {
   @Column({
     type: 'varchar',
     nullable: false,
-    length: 100,
+    length: 50,
     comment: '결제 거래 고유 ID',
   })
   transactionId: string;
@@ -27,7 +27,7 @@ export class Order {
   @Column({
     type: 'varchar',
     nullable: false,
-    length: 10,
+    length: 30,
     comment: '주문 번호',
   })
   orderNumber: string;
@@ -127,6 +127,30 @@ export class Order {
     comment: '장바구니 제품 총 가격',
   })
   totalPrice: number;
+
+  @Column({
+    type: 'varchar',
+    nullable: false,
+    length: 13,
+    comment: '전화번호',
+  })
+  phone: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: false,
+    length: 20,
+    comment: '수령자 명',
+  })
+  recipientName: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: false,
+    length: 15,
+    comment: '배송 방법',
+  })
+  deliveryType: string;
 
   @Column({
     type: 'varchar',

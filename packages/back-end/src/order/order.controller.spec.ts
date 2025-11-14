@@ -9,6 +9,8 @@ import { User } from '../user/entities/user.entity';
 import { PaymentMethod } from '../payment/entities/payment.entity';
 import { PaymentRepositoryImpl } from '../payment/payment.repository';
 import { DataSource } from 'typeorm';
+import { CartRepositoryImpl } from '../cart/cart.repository';
+import { Cart } from '../cart/entities/cart.entity';
 
 describe('OrderController', () => {
   let controller: OrderController;
@@ -21,6 +23,7 @@ describe('OrderController', () => {
         OrderRepositoryImpl,
         UserService,
         PaymentRepositoryImpl,
+        CartRepositoryImpl,
         {
           provide: DataSource,
           useValue: {
@@ -53,6 +56,17 @@ describe('OrderController', () => {
           provide: getRepositoryToken(PaymentMethod),
           useValue: {
             find: jest.fn(),
+            save: jest.fn(),
+            create: jest.fn(),
+            update: jest.fn(),
+            delete: jest.fn(),
+          },
+        },
+        {
+          provide: getRepositoryToken(Cart),
+          useValue: {
+            find: jest.fn(),
+            findOne: jest.fn(),
             save: jest.fn(),
             create: jest.fn(),
             update: jest.fn(),

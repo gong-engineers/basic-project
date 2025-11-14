@@ -6,9 +6,14 @@ import {
   IsArray,
   ValidateNested,
   Length,
+  IsEnum,
 } from 'class-validator';
 import { EachOrderRequestDto } from './each-order-request.dto';
-// import { Type } from 'class-transformer';
+
+export enum DeliveryType {
+  SAME_DAY = '당일 배송',
+  STANDARD = '일반 배송',
+}
 
 export class OrderRequestDto implements payment.PaymentMethodRequest {
   @ApiProperty({ description: '주문 정보' })
@@ -16,6 +21,23 @@ export class OrderRequestDto implements payment.PaymentMethodRequest {
   @IsArray()
   @ValidateNested({ each: true })
   orders: EachOrderRequestDto[];
+
+  @ApiProperty({ description: '전화번호' })
+  @IsNotEmpty()
+  @IsString()
+  @Length(11, 13)
+  phone: string;
+
+  @ApiProperty({ description: '수령자 명' })
+  @IsNotEmpty()
+  @IsString()
+  @Length(2, 20)
+  recipientName: string;
+
+  @ApiProperty({ description: '배송 방법' })
+  @IsNotEmpty()
+  @IsEnum(DeliveryType)
+  deliveryType: string;
 
   @ApiProperty({ description: '카드 소유자 이름' })
   @IsString()

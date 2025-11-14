@@ -6,11 +6,6 @@ import { client } from '../../lib/api';
 import type { cart, common } from '@basic-project/shared-types';
 import CartItem from './components/CartItem';
 
-// 임시로 만든 로그인 응답 타입
-interface LoginResponse {
-  accessToken: string;
-}
-
 export default function Carts() {
   const [cartList, setCartList] = useState<cart.CartInfoResponse[]>([]); // 장바구니 리스트 상태 관리
   const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set()); // 선택된 아이템의 cartId를 저장
@@ -22,27 +17,7 @@ export default function Carts() {
     (async () => {
       setIsLoading(true); // 로딩 시작
       try {
-        // 강제 로그인 요청
-        const loginResponse = await client.post<
-          { email: string; password: string },
-          LoginResponse
-        >(
-          'http://localhost:3001/auth/login',
-          { email: 'test@gmail.com', password: 'testtest' },
-          {
-            mode: 'cors',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-          },
-        );
-
-        // 강제 로그인 후 AccessToken을 localstorage에 저장
-        localStorage.setItem(
-          'accessToken',
-          'Bearer ' + loginResponse.accessToken,
-        );
-
-        // 강제 로그인 후 장바구니 조회
+        // 장바구니 조회
         const cartListResponse = await client.get<
           null,
           common.ResponseDto<cart.CartInfoResponse[]>
@@ -56,7 +31,7 @@ export default function Carts() {
 
         setCartList(cartListResponse.data);
       } catch (err) {
-        console.error('로그인 또는 장바구니 조회 실패:', err);
+        console.error('장바구니 조회 실패:', err);
       } finally {
         setIsLoading(false); // 로딩 종료 (성공/실패 상관없이)
       }
@@ -86,17 +61,19 @@ export default function Carts() {
   };
 
   // 체크박스 토글 핸들러
-  const handleToggleSelect = (cartId: number) => {
-    setSelectedItems((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(cartId)) {
-        newSet.delete(cartId);
-      } else {
-        newSet.add(cartId);
-      }
-      return newSet;
-    });
-  };
+  const handleToggleSelect =
+    (cartId: number, price: number, optionPrice: number, quantity: number) =>
+    () => {
+      setSelectedItems((prev) => {
+        const newSet = new Set(prev);
+        if (newSet.has(cartId)) {
+          newSet.delete(cartId);
+        } else {
+          newSet.add(cartId);
+        }
+        return newSet;
+      });
+    };
 
   // 결제하기 버튼 핸들러
   const handleCheckout = () => {
@@ -120,12 +97,15 @@ export default function Carts() {
     router.push('/orders');
   };
 
-  // 총 금액 계산
-  const totalAmount = cartList.reduce(
-    (sum, item) => sum + (item.price + item.optionPrice) * item.quantity,
-    0,
-  );
-  const shippingFee = totalAmount >= 50000 ? 0 : 3000; // 배송비 기준을 50000원으로 설정하여 그에 따른 배송비 출력
+  // 선택된 아이템들의 총 금액 계산 (계산된 값 - derived state)
+  const totalAmount = cartList
+    .filter((item) => selectedItems.has(item.cartId))
+    .reduce(
+      (sum, item) => sum + (item.price + item.optionPrice) * item.quantity,
+      0,
+    );
+
+  const shippingFee = totalAmount >= 50000 ? 0 : totalAmount === 0 ? 0 : 3000; // 배송비 기준을 50000원으로 설정하여 그에 따른 배송비 출력
   const finalAmount = totalAmount + shippingFee; // 배송비와 총 금액 계산
 
   return isLoading ? (
@@ -209,6 +189,11 @@ export default function Carts() {
               <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
                 <button
                   onClick={handleCheckout}
+                  disabled={cartList.length === 0}
+                  style={{
+                    backgroundColor: cartList.length === 0 ? '#ccc' : '#007bff',
+                    cursor: cartList.length === 0 ? 'not-allowed' : 'pointer',
+                  }}
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 sm:py-3 px-4 rounded-lg flex items-center justify-center gap-2 text-sm sm:text-base"
                 >
                   결제하기 →
