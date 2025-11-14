@@ -111,12 +111,6 @@ export default function Home() {
             {productList.map((product) => (
               <ItemCard key={product.id} item={product} />
             ))}
-            {/* TODO: 개발 완료 후 Link 제거 필요 */}
-            <Link href="/carts">
-              <div className="cursor-pointer border border-blue-500 rounded-md p-2 bg-blue-500 text-white">
-                장바구니
-              </div>
-            </Link>
           </>
         )}
       </div>
