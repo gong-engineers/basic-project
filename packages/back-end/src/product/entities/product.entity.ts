@@ -1,4 +1,4 @@
-import { item } from '@basic-project/shared-types';
+import { Categories, type Category } from '@basic-project/shared-types/item';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('products')
@@ -29,10 +29,10 @@ export class ProductEntity {
 
   @Column({
     type: 'enum',
-    enum: item.Categories,
+    enum: Categories,
     default: 'ETC',
   })
-  category: item.Category;
+  category: Category;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

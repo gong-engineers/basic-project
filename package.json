@@ -8,7 +8,8 @@
     "dev": "turbo run dev",
     "build": "turbo run build",
     "lint": "turbo run lint",
-    "develop": "docker-compose up --build --watch"
+    "develop": "docker-compose up --build --watch",
+    "seed": "pnpm --filter back-end seed:docker"
   },
   "packageManager": "pnpm@10.19.0"
 }

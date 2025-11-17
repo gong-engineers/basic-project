@@ -111,7 +111,7 @@ export class Order {
     comment: '장바구니 제품 옵션 명',
     default: null,
   })
-  optionName: string;
+  optionName: string | null;
 
   @Column({
     type: 'integer',
