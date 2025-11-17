@@ -3,6 +3,8 @@
 import { formatDatePeriod } from '@/utils/date.util';
 import { convertCategory } from '@/utils/item.util';
 import { Item } from '@basic-project/shared-types';
+import { useState } from 'react';
+import QuantitySelector from './QuantitySelector';
 
 interface Props {
   product: Item.Product;
@@ -19,6 +21,8 @@ function DescriptionSection(props: Props) {
     category,
   } = props.product;
 
+  const [quantity, setQuantity] = useState(1);
+
   const {
     label: categoryLabel,
     bgColor: categoryBgColor,
@@ -28,6 +32,10 @@ function DescriptionSection(props: Props) {
     discountStartDate,
     discountEndDate,
   );
+
+  const handleQuantityChange = (value: number) => {
+    setQuantity(value);
+  };
 
   return (
     <div className="flex flex-col divide-gray-300 gap-4 w-1/2">
@@ -65,7 +73,7 @@ function DescriptionSection(props: Props) {
         </div>
         <div>
           <div className="font-semibold">수량</div>
-          <div>todo: input box 추가</div>
+          <QuantitySelector value={quantity} onChange={handleQuantityChange} />
         </div>
         <div>
           <div className="font-semibold">상품 상세 설명</div>

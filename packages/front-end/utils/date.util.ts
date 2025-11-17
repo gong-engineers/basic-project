@@ -2,10 +2,11 @@ export const formatDatePeriod = (
   startDate: string | null,
   endDate: string | null,
 ) => {
-  if (!startDate && !endDate) return null;
+  if (!startDate && !endDate) {
+    return null;
+  }
 
-  const format = (date: string) =>
-    new Date(date).toLocaleDateString('ko-KR').replace(/\.$/, '');
+  const format = (date: string) => date.slice(0, 10);
 
   if (startDate && endDate) {
     return `${format(startDate)} ~ ${format(endDate)}`;
