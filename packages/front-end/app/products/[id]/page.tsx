@@ -1,4 +1,4 @@
-import { Item } from '@basic-project/shared-types';
+import { item } from '@basic-project/shared-types';
 import { notFound } from 'next/navigation';
 import DescriptionSection from './components/DescriptionSection';
 import ImageSection from './components/ImageSection';
@@ -19,7 +19,7 @@ async function ProductPage(props: Props) {
     return notFound();
   }
 
-  const product: Item.Product = await res.json();
+  const product: item.Product = await res.json();
 
   return (
     <div className="min-h-screen bg-white py-4 sm:py-8">

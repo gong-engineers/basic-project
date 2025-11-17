@@ -1,13 +1,13 @@
 import { formatDatePeriod } from '@/utils/date.util';
 import { convertCategory } from '@/utils/item.util';
-import { Item } from '@basic-project/shared-types';
+import { item } from '@basic-project/shared-types';
 import { isEmpty } from 'lodash-es';
 
 import Image from 'next/image';
 import Link from 'next/link';
 
 interface Props {
-  item: Item.Product;
+  item: item.Product;
 }
 
 function ItemCard(props: Props) {

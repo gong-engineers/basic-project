@@ -2,12 +2,12 @@
 
 import { formatDatePeriod } from '@/utils/date.util';
 import { convertCategory } from '@/utils/item.util';
-import { Item } from '@basic-project/shared-types';
+import { item } from '@basic-project/shared-types';
 import { useState } from 'react';
 import QuantitySelector from './QuantitySelector';
 
 interface Props {
-  product: Item.Product;
+  product: item.Product;
 }
 
 function DescriptionSection(props: Props) {
