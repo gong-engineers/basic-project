@@ -10,6 +10,7 @@ import { validationSchema } from './config/validation.schema';
 import { OrderModule } from './order/order.module';
 import { PaymentModule } from './payment/payment.module';
 import { ProductModule } from './product/product.module';
+import { SeedModule } from './seed/seed.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -27,6 +28,7 @@ import { UserModule } from './user/user.module';
     CartModule,
     OrderModule,
     PaymentModule,
+    SeedModule,
   ],
   controllers: [],
   providers: [],
