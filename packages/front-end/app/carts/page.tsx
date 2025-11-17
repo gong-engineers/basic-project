@@ -13,27 +13,28 @@ export default function Carts() {
   const [isLoading, setIsLoading] = useState(false); // 이미 렌더링된 상태에서 장바구니 리스트 조회를 위한 로딩 상태 관리 (또 반복적으로 렌더링되는 것을 방지하기 위한 state)
 
   useEffect(() => {
-    // 장바구니 리스트 페이지를 테스트하기 위한 테스트 계정 강제 로그인
     (async () => {
-      setIsLoading(true); // 로딩 시작
-      try {
-        // 장바구니 조회
-        const cartListResponse = await client.get<
-          null,
-          common.ResponseDto<cart.CartInfoResponse[]>
-        >('http://localhost:3001/api/v1/cart', null, {
-          headers: {
-            Authorization: localStorage.getItem('accessToken') || '',
-          },
-          mode: 'cors',
-          credentials: 'include',
-        });
+      if (!isLoading) {
+        setIsLoading(true); // 로딩 시작
+        try {
+          // 장바구니 조회
+          const cartListResponse = await client.get<
+            null,
+            common.ResponseDto<cart.CartInfoResponse[]>
+          >('http://localhost:3001/api/v1/cart', null, {
+            headers: {
+              Authorization: localStorage.getItem('accessToken') || '',
+            },
+            mode: 'cors',
+            credentials: 'include',
+          });
 
-        setCartList(cartListResponse.data);
-      } catch (err) {
-        console.error('장바구니 조회 실패:', err);
-      } finally {
-        setIsLoading(false); // 로딩 종료 (성공/실패 상관없이)
+          setCartList(cartListResponse.data);
+        } catch (err) {
+          console.error('장바구니 조회 실패:', err);
+        } finally {
+          setIsLoading(false); // 로딩 종료 (성공/실패 상관없이)
+        }
       }
     })();
   }, []); // 빈 배열: 컴포넌트 마운트 시 한 번만 실행
