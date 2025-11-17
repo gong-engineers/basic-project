@@ -11,6 +11,7 @@ import { OrderModule } from './order/order.module';
 import { PaymentModule } from './payment/payment.module';
 import { ProductModule } from './product/product.module';
 import { UserModule } from './user/user.module';
+import { BatchModule } from './batch/batch.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { UserModule } from './user/user.module';
     CartModule,
     OrderModule,
     PaymentModule,
+    BatchModule,
   ],
   controllers: [],
   providers: [],
