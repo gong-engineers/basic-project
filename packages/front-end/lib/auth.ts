@@ -2,16 +2,16 @@
 export async function fetchWithAuth(url: string, options: RequestInit = {}) {
   // Access Token 가져오기
   const accessToken = sessionStorage.getItem('accessToken');
-  
+
   // 기본 헤더에 Authorization 추가
   const headers = {
     ...options.headers,
-    'Authorization': `Bearer ${accessToken}`,
+    Authorization: `Bearer ${accessToken}`,
   };
 
   try {
     const response = await fetch(url, { ...options, headers });
-    
+
     // 401 에러(인증 실패)가 발생하면 토큰 갱신 시도
     if (response.status === 401) {
       const refreshToken = localStorage.getItem('refreshToken');
@@ -20,13 +20,16 @@ export async function fetchWithAuth(url: string, options: RequestInit = {}) {
       }
 
       // Refresh Token으로 새 Access Token 요청
-      const refreshResponse = await fetch('http://localhost:3001/auth/refresh', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${refreshToken}`,
+      const refreshResponse = await fetch(
+        'http://localhost:3001/auth/refresh',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${refreshToken}`,
+          },
         },
-      });
+      );
 
       if (!refreshResponse.ok) {
         // Refresh Token도 만료된 경우 로그아웃 처리

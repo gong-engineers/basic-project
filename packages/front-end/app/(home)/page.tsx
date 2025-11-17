@@ -1,18 +1,21 @@
 'use client';
 
 import { client } from '@/lib/api';
-import { useRouter } from 'next/navigation';
 import { item } from '@basic-project/shared-types';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import ItemCard from './components/ItemCard';
 
+// 임시로 만든 로그인 응답 타입
+interface LoginResponse {
+  accessToken: string;
+}
+
 export default function Home() {
-  const router = useRouter();
   const [productList, setProductList] = useState<item.Product[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    if (typeof window !== 'undefined') { // Check if running on the client side
+    if (typeof window !== 'undefined') {
       return localStorage.getItem('accessToken') !== null;
     }
     return false;
@@ -38,13 +41,32 @@ export default function Home() {
     fetchProducts();
   }, []);
 
-  // 로그아웃 핸들러
-  const handleLogout = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('userName');
-    setIsLoggedIn(false);
-    router.push('/'); // 홈으로 이동하여 UI 갱신
+  // 로그인 기능이 합쳐지기 전까지 임의 로그인 핸들러 추가
+  const handleLogin = async () => {
+    try {
+      const loginResponse = await client.post<
+        { email: string; password: string },
+        LoginResponse
+      >(
+        'http://localhost:3001/auth/login',
+        { email: 'test@gmail.com', password: 'testtest' },
+        {
+          mode: 'cors',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+        },
+      );
+
+      // 로그인 후 AccessToken을 localstorage에 저장
+      localStorage.setItem(
+        'accessToken',
+        'Bearer ' + loginResponse.accessToken,
+      );
+
+      setIsLoggedIn(true);
+    } catch (err) {
+      console.error('로그인 실패:', err);
+    }
   };
 
   return (
@@ -59,24 +81,19 @@ export default function Home() {
                   장바구니
                 </div>
               </Link>
-              <Link href="#">
+              <Link href="/orderHistory">
                 <div className="cursor-pointer border border-green-500 rounded-md p-2 bg-green-500 text-white">
                   주문 이력
                 </div>
               </Link>
-              <button
-                onClick={handleLogout}
-                className="cursor-pointer rounded-md p-2 bg-red-500 text-white"
-              >
-                로그아웃
-              </button>
             </div>
           ) : (
-            <Link href="/login">
-              <div className="cursor-pointer rounded-md p-2 bg-blue-600 text-white">
-                로그인
-              </div>
-            </Link>
+            <button
+              onClick={handleLogin}
+              className="cursor-pointer rounded-md p-2 bg-gray-400 text-white"
+            >
+              로그인
+            </button>
           )}
         </div>
       </div>
@@ -94,12 +111,6 @@ export default function Home() {
             {productList.map((product) => (
               <ItemCard key={product.id} item={product} />
             ))}
-            {/* TODO: 개발 완료 후 Link 제거 필요 */}
-            <Link href="/carts">
-              <div className="cursor-pointer border border-blue-500 rounded-md p-2 bg-blue-500 text-white">
-                장바구니
-              </div>
-            </Link>
           </>
         )}
       </div>

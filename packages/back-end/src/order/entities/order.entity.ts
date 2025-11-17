@@ -177,6 +177,15 @@ export class Order {
   paymentMethodId: number;
 
   @Column({
+    type: 'char',
+    nullable: true,
+    length: 1,
+    comment: '구매 확정 여부 (default "N")',
+    default: 'N',
+  })
+  purchaseConfirm: string;
+
+  @Column({
     type: 'timestamp',
     nullable: false,
     comment: '주문 생성 일자',

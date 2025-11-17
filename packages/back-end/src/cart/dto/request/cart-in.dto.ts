@@ -7,7 +7,7 @@ export class CartInDto implements cart.CartInRequest {
     description: '장바구니 제품 카테고리 ID',
   })
   @IsNotEmpty()
-  @IsNumber()
+  @IsNumber({})
   categoryId: number;
 
   @ApiProperty({ description: '장바구니 제품 카테고리 명' })
