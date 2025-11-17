@@ -1,4 +1,4 @@
-import { item } from '@basic-project/shared-types';
+import { Categories, type Category } from '@basic-project/shared-types/item';
 import {
   IsArray,
   IsIn,
@@ -36,6 +36,6 @@ export class CreateProductDto {
   discountEndDate?: string | null;
 
   @IsOptional()
-  @IsIn(item.Categories)
-  category?: item.Category;
+  @IsIn([...Categories])
+  category?: Category;
 }
