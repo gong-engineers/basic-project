@@ -1,7 +1,7 @@
 'use client';
 
 import { client } from '@/lib/api';
-import { Item } from '@basic-project/shared-types';
+import { item } from '@basic-project/shared-types';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import ItemCard from './components/ItemCard';
@@ -12,7 +12,7 @@ interface LoginResponse {
 }
 
 export default function Home() {
-  const [productList, setProductList] = useState<Item.Product[]>([]);
+  const [productList, setProductList] = useState<item.Product[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -26,7 +26,7 @@ export default function Home() {
     const fetchProducts = async () => {
       try {
         setIsLoading(true);
-        const data = await client.get<null, Item.Product[]>(
+        const data = await client.get<null, item.Product[]>(
           'http://localhost:3001/api/v1/products',
         );
 
@@ -81,7 +81,7 @@ export default function Home() {
                   장바구니
                 </div>
               </Link>
-              <Link href="#">
+              <Link href="/orderHistory">
                 <div className="cursor-pointer border border-green-500 rounded-md p-2 bg-green-500 text-white">
                   주문 이력
                 </div>
@@ -111,12 +111,6 @@ export default function Home() {
             {productList.map((product) => (
               <ItemCard key={product.id} item={product} />
             ))}
-            {/* TODO: 개발 완료 후 Link 제거 필요 */}
-            <Link href="/carts">
-              <div className="cursor-pointer border border-blue-500 rounded-md p-2 bg-blue-500 text-white">
-                장바구니
-              </div>
-            </Link>
           </>
         )}
       </div>
