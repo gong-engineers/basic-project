@@ -84,9 +84,14 @@ export default function Header() {
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <Button variant={'ghost'}>로그인</Button>
+                <Button variant={'ghost'}>
+                  <Link href="/login">로그인</Link>
+                </Button>
                 <Button variant={'default'} className="hidden sm:inline-flex">
-                  회원가입
+                  <Link href="/register">회원가입</Link>
+                </Button>
+                <Button variant={'default'} className="sm:hidden">
+                  <Link href="/register">회원가입</Link>
                 </Button>
               </div>
             )}
