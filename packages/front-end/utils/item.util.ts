@@ -1,6 +1,6 @@
-import { Item } from '@basic-project/shared-types';
+import { item } from '@basic-project/shared-types';
 
-export const convertCategory = (category: Item.Category) => {
+export const convertCategory = (category: item.Category) => {
   switch (category) {
     case 'SOCCER':
       return {
