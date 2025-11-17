@@ -31,13 +31,13 @@ async function request<T>(
 
   // api 실제 요청 후 반환 데이터 저장
   const response = await fetch(url, {
+    ...safeOptions, // 요청 옵션 적용
     headers: {
       'Content-Type': 'application/json',
       ...(token ? { Authorization: token } : {}),
       ...options.headers,
     },
     credentials: 'include', // Cookie 포함 요청(RefreshToken 포함 요청)
-    ...safeOptions, // 요청 옵션 적용
   });
 
   // api 요청에 실패했다면 에러 처리

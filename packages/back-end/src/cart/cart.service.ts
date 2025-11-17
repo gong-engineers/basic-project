@@ -135,13 +135,6 @@ export class CartService {
 
       // 수정하고자 하는 장바구니가 없거나 로그인한 유저가 가진 장바구니가 아니면 권한 거절
       if (!cart || cart.member.id != user.id) {
-        console.log('cart : ' + cart.categoryName);
-        console.log(
-          '장바구니에 등록된 회원 ID : ' +
-            cart.member.id +
-            ' 로그인한 유저 ID : ' +
-            user.id,
-        );
         this.logger.warn(
           `Cart not found with ID: ${cartUpdateDto.cartId} or not user ${user.id}'s cart`,
         );

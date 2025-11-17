@@ -71,8 +71,10 @@ export class AuthController {
       maxAge: 1000 * 60 * 60 * 24 * 30, // 2주
     });
 
-    return ResponseDto.success('Refresh tokens successful', {
-      accessToken: accessToken,
-    });
+    return response.json(
+      ResponseDto.success('Refresh tokens successful', {
+        accessToken,
+      }),
+    );
   }
 }

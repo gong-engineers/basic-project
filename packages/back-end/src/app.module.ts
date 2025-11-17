@@ -12,6 +12,7 @@ import { PaymentModule } from './payment/payment.module';
 import { ProductModule } from './product/product.module';
 import { SeedModule } from './seed/seed.module';
 import { UserModule } from './user/user.module';
+import { BatchModule } from './batch/batch.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { UserModule } from './user/user.module';
     CartModule,
     OrderModule,
     PaymentModule,
+    BatchModule,
     SeedModule,
   ],
   controllers: [],
