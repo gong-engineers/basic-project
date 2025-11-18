@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { client } from '../../lib/api';
 import type { order, common } from '@basic-project/shared-types';
+import GroupOrderItem from './components/GroupOrderItem';
 
 // orderNumber로 그룹화된 주문 데이터 타입
 interface GroupedOrder {
@@ -19,8 +20,17 @@ export default function OrderHistory() {
   const [groupedOrders, setGroupedOrders] = useState<GroupedOrder[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const hasFetched = useRef(false); // API 호출 여부를 추적 (React Strict Mode 대응)
 
   useEffect(() => {
+    // 이미 한 번 실행되었으면 중복 호출 방지
+    // React Strict Mode에서는 useEffect가 두 번 실행되는데, state로는 이를 막을 수 없고 State는 재마운트 시 초기화되기 때문
+    // 때문에 useRef를 사용하여 중복 방지
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+
+    const isCancelled = false; // cleanup을 위한 플래그
+
     (async () => {
       setIsLoading(true);
       try {
@@ -29,12 +39,12 @@ export default function OrderHistory() {
           null,
           common.ResponseDto<order.OrderInfoResponse[]>
         >('http://localhost:3001/api/v1/order', null, {
-          headers: {
-            Authorization: localStorage.getItem('accessToken') || '',
-          },
           mode: 'cors',
           credentials: 'include',
         });
+
+        // 컴포넌트가 unmount되었으면 state 업데이트 하지 않음
+        if (isCancelled) return;
 
         setOrderList(orderListResponse.data);
 
@@ -42,9 +52,13 @@ export default function OrderHistory() {
         const grouped = groupByOrderNumber(orderListResponse.data);
         setGroupedOrders(grouped);
       } catch (err) {
-        console.error('주문 이력 조회 실패:', err);
+        if (!isCancelled) {
+          console.error('주문 이력 조회 실패:', err);
+        }
       } finally {
-        setIsLoading(false);
+        if (!isCancelled) {
+          setIsLoading(false);
+        }
       }
     })();
   }, []);
@@ -84,6 +98,30 @@ export default function OrderHistory() {
 
   // 주문 확정 버튼 핸들러
   const handlePurchaseConfirm = async (orderId: number) => {
+    // 이미 확정된 주문인지 확인 (중복 클릭 방지)
+    const targetOrder = orderList.find((item) => item.orderId === orderId);
+    if (!targetOrder || targetOrder.purchaseConfirm === 'Y') {
+      return;
+    }
+
+    // 낙관적 업데이트 (UI 먼저 업데이트)
+    setOrderList((prevList) =>
+      prevList.map((item) =>
+        item.orderId === orderId ? { ...item, purchaseConfirm: 'Y' } : item,
+      ),
+    );
+
+    setGroupedOrders((prevGroups) =>
+      prevGroups.map((group) => ({
+        ...group,
+        orders: group.orders.map((order) =>
+          order.orderId === orderId
+            ? { ...order, purchaseConfirm: 'Y' }
+            : order,
+        ),
+      })),
+    );
+
     try {
       await client.patch<
         order.PurchaseConfirmRequest,
@@ -95,37 +133,33 @@ export default function OrderHistory() {
           purchaseConfirm: 'Y',
         },
         {
-          headers: {
-            Authorization: localStorage.getItem('accessToken') || '',
-          },
           mode: 'cors',
           credentials: 'include',
         },
-      );
-
-      // 주문 이력 리스트 업데이트
-      setOrderList((prevList) =>
-        prevList.map((item) =>
-          item.orderId === orderId ? { ...item, purchaseConfirm: 'Y' } : item,
-        ),
-      );
-
-      // 그룹화된 주문 리스트도 업데이트
-      setGroupedOrders((prevGroups) =>
-        prevGroups.map((group) => ({
-          ...group,
-          orders: group.orders.map((order) =>
-            order.orderId === orderId
-              ? { ...order, purchaseConfirm: 'Y' }
-              : order,
-          ),
-        })),
       );
 
       alert('주문이 확정되었습니다.');
     } catch (err) {
       console.error('주문 확정 실패:', err);
       alert('주문 확정에 실패했습니다.');
+
+      // 실패 시 롤백
+      setOrderList((prevList) =>
+        prevList.map((item) =>
+          item.orderId === orderId ? { ...item, purchaseConfirm: 'N' } : item,
+        ),
+      );
+
+      setGroupedOrders((prevGroups) =>
+        prevGroups.map((group) => ({
+          ...group,
+          orders: group.orders.map((order) =>
+            order.orderId === orderId
+              ? { ...order, purchaseConfirm: 'N' }
+              : order,
+          ),
+        })),
+      );
     }
   };
 
@@ -147,107 +181,16 @@ export default function OrderHistory() {
         {/* 주문 이력 리스트 */}
         <div className="flex flex-col gap-4 sm:gap-6">
           {groupedOrders.length !== 0 ? (
-            groupedOrders.map((group, groupIndex) => (
-              <div
-                key={groupIndex}
-                className="border border-gray-300 rounded-lg p-4 sm:p-6"
-              >
-                {/* 주문 번호 및 날짜 */}
-                <div className="mb-4 pb-4 border-b border-gray-200">
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                    <div>
-                      <h3 className="text-lg font-bold text-gray-800">
-                        주문번호: {group.orderNumber}
-                      </h3>
-                      <p className="text-sm text-gray-600">
-                        주문일시:{' '}
-                        {new Date(group.createdAt).toLocaleString('ko-KR')}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm text-gray-600">배송지</p>
-                      <p className="text-sm font-medium">
-                        {group.orders[0].deliveryAddress}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 주문 상품 목록 */}
-                <div className="space-y-3">
-                  {group.orders.map((order, orderIndex) => (
-                    <div
-                      key={orderIndex}
-                      className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 p-3 bg-gray-50 rounded-lg"
-                    >
-                      {/* 상품 정보 */}
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-gray-800">
-                          {order.productName}
-                        </h4>
-                        {order.optionCheck === 'Y' && order.optionName && (
-                          <p className="text-sm text-gray-600">
-                            옵션: {order.optionName} (+
-                            {order.optionPrice?.toLocaleString()}원)
-                          </p>
-                        )}
-                        <p className="text-sm text-gray-600">
-                          수량: {order.quantity}개 | 금액:{' '}
-                          {order.price.toLocaleString()}원
-                        </p>
-                        <p className="text-sm font-medium text-gray-800 mt-1">
-                          총 금액: {order.totalPrice.toLocaleString()}원
-                        </p>
-                      </div>
-
-                      {/* 주문 확정 버튼 */}
-                      <button
-                        onClick={() => handlePurchaseConfirm(order.orderId)}
-                        disabled={order.purchaseConfirm === 'Y'}
-                        className={`px-4 py-2 rounded-lg font-medium text-white whitespace-nowrap ${
-                          order.purchaseConfirm === 'Y'
-                            ? 'bg-gray-400 cursor-not-allowed'
-                            : 'bg-orange-500 hover:bg-orange-600 cursor-pointer'
-                        }`}
-                      >
-                        {order.purchaseConfirm === 'Y'
-                          ? '확정 완료'
-                          : '주문 확정'}
-                      </button>
-                    </div>
-                  ))}
-                </div>
-
-                {/* 주문 요약 정보 */}
-                <div className="mt-4 pt-4 border-t border-gray-200">
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                    <div className="text-sm text-gray-600">
-                      <p>수령인: {group.orders[0].recipientName}</p>
-                      <p>연락처: {group.orders[0].phone}</p>
-                      <p>배송 방식: {group.orders[0].deliveryType}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm text-gray-600">
-                        상품 금액: {group.totalAmount.toLocaleString()}원
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        배송비:{' '}
-                        {group.deliveryFee === 0
-                          ? '무료'
-                          : `${group.deliveryFee.toLocaleString()}원`}
-                      </p>
-                      <p className="text-lg font-bold text-blue-600 mt-1">
-                        총 결제 금액:{' '}
-                        {(
-                          group.totalAmount + group.deliveryFee
-                        ).toLocaleString()}
-                        원
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))
+            groupedOrders.map((group, groupIndex) => {
+              return (
+                <GroupOrderItem
+                  key={groupIndex}
+                  group={group}
+                  groupIndex={groupIndex}
+                  handlePurchaseConfirm={handlePurchaseConfirm}
+                />
+              );
+            })
           ) : (
             <div className="text-center py-12 text-gray-500">
               <p className="text-lg">주문 이력이 없습니다.</p>
