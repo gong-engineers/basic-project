@@ -28,10 +28,19 @@ export default function Footer() {
           </div>
           {/* Section 3 */}
           <div className="flex flex-col gap-3">
-            <h3 className="font-semibold text-foreground">배송</h3>
+            <h3 className="font-semibold text-foreground">지원</h3>
             <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
               <li>
-                <a href="/carts">장바구니</a>
+                <a href="#">고객 문의</a>
+              </li>
+              <li>
+                <a href="#">배송 정보</a>
+              </li>
+              <li>
+                <a href="#">반품 정책</a>
+              </li>
+              <li>
+                <a href="#">FAQ</a>
               </li>
             </ul>
           </div>
