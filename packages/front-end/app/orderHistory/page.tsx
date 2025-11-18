@@ -29,7 +29,7 @@ export default function OrderHistory() {
     if (hasFetched.current) return;
     hasFetched.current = true;
 
-    let isCancelled = false; // cleanup을 위한 플래그
+    const isCancelled = false; // cleanup을 위한 플래그
 
     (async () => {
       setIsLoading(true);
