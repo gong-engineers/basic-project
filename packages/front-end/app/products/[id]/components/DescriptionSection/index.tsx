@@ -1,9 +1,17 @@
 'use client';
 
+import { useAuthStore } from '@/stores/authStore';
+import { isAuthError } from '@/utils/auth.util';
 import { formatDatePeriod } from '@/utils/date.util';
+import { normalizeError } from '@/utils/error.util';
 import { convertCategory } from '@/utils/item.util';
 import { item } from '@basic-project/shared-types';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { toast } from 'react-hot-toast';
+import { addToCart } from '../../utils/cart';
+import { buyNow } from '../../utils/order';
+import NeedLoginToast from './NeedLoginToast';
 import QuantitySelector from './QuantitySelector';
 
 interface Props {
@@ -21,7 +29,11 @@ function DescriptionSection(props: Props) {
     category,
   } = props.product;
 
+  const router = useRouter();
   const [quantity, setQuantity] = useState(1);
+
+  const user = useAuthStore((state) => state.user);
+  const isLoggedIn = !!user;
 
   const {
     label: categoryLabel,
@@ -35,6 +47,34 @@ function DescriptionSection(props: Props) {
 
   const handleQuantityChange = (value: number) => {
     setQuantity(value);
+  };
+
+  const handleAddToCart = async () => {
+    try {
+      await addToCart(props.product, quantity);
+
+      toast.success('상품을 장바구니에 담았습니다.');
+      router.push('/carts');
+    } catch (err) {
+      const error = normalizeError(err);
+
+      if (isAuthError(error)) {
+        toast.error((t) => <NeedLoginToast t={t} />, { duration: Infinity });
+        return;
+      }
+
+      toast.error(error.message, { duration: 5000 });
+    }
+  };
+
+  const handleBuyNow = () => {
+    if (!isLoggedIn) {
+      toast.error((t) => <NeedLoginToast t={t} />, { duration: Infinity });
+      return;
+    }
+
+    buyNow(props.product, quantity);
+    router.push('/orders');
   };
 
   return (
@@ -85,13 +125,13 @@ function DescriptionSection(props: Props) {
 
       <div className="flex flex-col gap-2">
         <button
-          onClick={() => console.log('todo: 장바구니 담기')}
+          onClick={handleAddToCart}
           className="w-full bg-blue-600 text-white rounded-sm h-10 font-semibold cursor-pointer"
         >
           🛒 장바구니 담기
         </button>
         <button
-          onClick={() => console.log('todo: 바로 구매')}
+          onClick={handleBuyNow}
           className="w-full bg-green-600 text-white rounded-sm h-10 font-semibold cursor-pointer"
         >
           바로 구매

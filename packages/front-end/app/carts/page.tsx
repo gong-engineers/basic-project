@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import type { cart, common } from '@basic-project/shared-types';
 import { useRouter } from 'next/navigation';
 import { client } from '../../lib/api';
-import type { cart, common } from '@basic-project/shared-types';
 import CartItem from './components/CartItem';
 
 export default function Carts() {
