@@ -2,12 +2,15 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/stores/authStore';
 
 // email, password: 폼 필드 값
 // loading: 전송 중 버튼 비활성화/스피너 대체 텍스트에 사용
 // error: 에러 메시지 표시
 // showPassword: 비밀번호 표시/숨기기 토글
 export default function LoginPage() {
+  const login = useAuthStore((state) => state.login);
+
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -50,43 +53,44 @@ export default function LoginPage() {
     // email, password를 백엔드로 전송
     setLoading(true);
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-      const res = await fetch(`${apiUrl}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ email, password }),
-      });
+      await login({ email, password });
+      // const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      // const res = await fetch(`${apiUrl}/auth/login`, {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   credentials: 'include',
+      //   body: JSON.stringify({ email, password }),
+      // });
 
-      // 서버 응답 받기
-      const data = await res.json();
-      if (!res.ok) {
-        // Invalid credentials 메시지를 한글로 변환
-        if (data?.message === 'Invalid credentials') {
-          // 양식은 통과했지만 인증 실패한 경우, 버튼 아래에 공통 메시지 표시
-          setSubmitError('이메일 또는 비밀번호가 올바르지 않습니다.');
-        } else {
-          setEmailError(data?.message || '로그인에 실패했습니다.');
-        }
-        return;
-      }
+      // // 서버 응답 받기
+      // const data = await res.json();
+      // if (!res.ok) {
+      //   // Invalid credentials 메시지를 한글로 변환
+      //   if (data?.message === 'Invalid credentials') {
+      //     // 양식은 통과했지만 인증 실패한 경우, 버튼 아래에 공통 메시지 표시
+      //     setSubmitError('이메일 또는 비밀번호가 올바르지 않습니다.');
+      //   } else {
+      //     setEmailError(data?.message || '로그인에 실패했습니다.');
+      //   }
+      //   return;
+      // }
 
-      // JWT 토큰 저장 (Access Token & Refresh Token)
-      if (data?.accessToken) {
-        localStorage.setItem('accessToken', data.accessToken);
-        // Refresh Token도 저장 (있는 경우)
-        if (data.refreshToken) {
-          localStorage.setItem('refreshToken', data.refreshToken);
-        }
-        // 사용자 정보 저장
-        if (data.user?.name) {
-          localStorage.setItem('userName', data.user.name);
-        }
-      }
+      // // JWT 토큰 저장 (Access Token & Refresh Token)
+      // if (data?.accessToken) {
+      //   localStorage.setItem('accessToken', data.accessToken);
+      //   // Refresh Token도 저장 (있는 경우)
+      //   if (data.refreshToken) {
+      //     localStorage.setItem('refreshToken', data.refreshToken);
+      //   }
+      //   // 사용자 정보 저장
+      //   if (data.user?.name) {
+      //     localStorage.setItem('userName', data.user.name);
+      //   }
+      // }
 
       // 리다이렉트
       router.push('/');
-    } catch (err) {
+    } catch {
       setEmailError('서버와 통신 중 오류가 발생했습니다.');
     } finally {
       setLoading(false);
