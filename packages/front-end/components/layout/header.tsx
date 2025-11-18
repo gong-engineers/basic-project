@@ -1,8 +1,16 @@
 'use client';
 
-import Link from 'next/link';
-import { Input } from '../ui/input';
+import { useAuthStore } from '@/stores/authStore';
 import { Search, ShoppingCart, User } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '../ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
+import { Input } from '../ui/input';
 import {
   Sheet,
   SheetContent,
@@ -10,14 +18,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '../ui/sheet';
-import { Button } from '../ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from '../ui/dropdown-menu';
-import { useAuthStore } from '@/stores/authStore';
 
 export default function Header() {
   const user = useAuthStore((state) => state.user);
@@ -47,7 +47,7 @@ export default function Header() {
           <div className="flex items-center gap-2">
             <div>
               <span className="text-sm text-foreground">
-                {user?.email.split('@')[0]}
+                {user?.email ? user.email.split('@')[0] : ''}
               </span>
             </div>
             {/* Search - Mobile */}
