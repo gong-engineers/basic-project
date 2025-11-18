@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { client } from '../../lib/api';
 import type { cart, common } from '@basic-project/shared-types';
@@ -11,33 +11,44 @@ export default function Carts() {
   const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set()); // 선택된 아이템의 cartId를 저장
   const router = useRouter(); // 페이지 이동을 위한 router 선언
   const [isLoading, setIsLoading] = useState(false); // 이미 렌더링된 상태에서 장바구니 리스트 조회를 위한 로딩 상태 관리 (또 반복적으로 렌더링되는 것을 방지하기 위한 state)
+  const hasFetched = useRef(false); // API 호출 여부를 추적 (React Strict Mode 대응)
 
   useEffect(() => {
-    (async () => {
-      if (!isLoading) {
-        setIsLoading(true); // 로딩 시작
-        try {
-          // 장바구니 조회
-          const cartListResponse = await client.get<
-            null,
-            common.ResponseDto<cart.CartInfoResponse[]>
-          >('http://localhost:3001/api/v1/cart', null, {
-            headers: {
-              Authorization: localStorage.getItem('accessToken') || '',
-            },
-            mode: 'cors',
-            credentials: 'include',
-          });
+    // 이미 한 번 실행되었으면 중복 호출 방지
+    // React Strict Mode에서는 useEffect가 두 번 실행되는데, state로는 이를 막을 수 없고 State는 재마운트 시 초기화되기 때문
+    // 때문에 useRef를 사용하여 중복 방지
+    if (hasFetched.current) return;
+    hasFetched.current = true;
 
-          setCartList(cartListResponse.data);
-        } catch (err) {
+    let isCancelled = false; // cleanup을 위한 플래그
+
+    (async () => {
+      setIsLoading(true); // 로딩 시작
+      try {
+        // 장바구니 조회
+        const cartListResponse = await client.get<
+          null,
+          common.ResponseDto<cart.CartInfoResponse[]>
+        >('http://localhost:3001/api/v1/cart', null, {
+          mode: 'cors',
+          credentials: 'include',
+        });
+
+        // 컴포넌트가 unmount되었으면 state 업데이트 하지 않음
+        if (isCancelled) return;
+
+        setCartList(cartListResponse.data);
+      } catch (err) {
+        if (!isCancelled) {
           console.error('장바구니 조회 실패:', err);
-        } finally {
+        }
+      } finally {
+        if (!isCancelled) {
           setIsLoading(false); // 로딩 종료 (성공/실패 상관없이)
         }
       }
     })();
-  }, []); // 빈 배열: 컴포넌트 마운트 시 한 번만 실행
+  }, []);
 
   // 수량 변경 핸들러
   const handleQuantityChange = (cartId: number, newQuantity: number) => {

@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import type { cart, common } from '@basic-project/shared-types';
 import { client } from '../../../lib/api';
 
@@ -23,8 +24,14 @@ export default function CartItem({
   isSelected,
   onToggleSelect,
 }: CartItemProps) {
+  const [isUpdating, setIsUpdating] = React.useState(false); // API 호출 중 상태
+  const [isDeleting, setIsDeleting] = React.useState(false); // 삭제 중 상태
+
   // 수량 변경 핸들러
   const handleQuantityChange = async (type: 'increase' | 'decrease') => {
+    // 이미 업데이트 중이면 중복 호출 방지
+    if (isUpdating) return;
+
     // 만약 수량이 1개 남았는데 수량을 감소시키려고 하면 삭제 여부를 물어본다.
     if (item.quantity === 1 && type === 'decrease') {
       const result = confirm(
@@ -33,57 +40,68 @@ export default function CartItem({
       if (result) {
         deleteCart(item.cartId);
       }
+      return;
     }
+
+    const newQuantity =
+      type === 'increase' ? item.quantity + 1 : item.quantity - 1;
+
+    // 유효하지 않은 수량이면 중단
+    if (newQuantity <= 0) return;
+
+    setIsUpdating(true);
+
+    // 낙관적 업데이트 (UI 먼저 업데이트)
+    onQuantityChange(item.cartId, newQuantity);
 
     try {
       await client.put<cart.CartUpdateRequest, common.ResponseDto<null>>(
         `http://localhost:3001/api/v1/cart`,
         {
           cartId: item.cartId,
-          quantity: type === 'increase' ? item.quantity + 1 : item.quantity - 1,
+          quantity: newQuantity,
           price: item.price,
           optionCheck: item.optionCheck as 'N' | 'Y',
           optionId: item.optionId,
           optionName: item.optionName,
           optionPrice: item.optionPrice,
-          totalPrice: (item.price + item.optionPrice) * item.quantity,
+          totalPrice: (item.price + item.optionPrice) * newQuantity,
         },
         {
-          headers: {
-            Authorization: localStorage.getItem('accessToken') || '',
-            'Content-Type': 'application/json',
-          },
           mode: 'cors',
           credentials: 'include',
         },
       );
     } catch (error) {
       console.error('수량 변경 실패:', error);
-    }
-
-    // 새로운 수량으로 업데이트
-    const newQuantity =
-      type === 'increase' ? item.quantity + 1 : item.quantity - 1;
-    if (newQuantity > 0) {
-      onQuantityChange(item.cartId, newQuantity);
+      // 실패 시 롤백
+      onQuantityChange(item.cartId, item.quantity);
+    } finally {
+      setIsUpdating(false);
     }
   };
 
   // 장바구니 삭제 핸들러
   const deleteCart = async (cartId: number) => {
+    // 이미 삭제 중이면 중복 호출 방지
+    if (isDeleting) return;
+
+    setIsDeleting(true);
+
+    // 낙관적 업데이트 (UI 먼저 업데이트)
+    onDelete(cartId);
+
     try {
       await client.delete(`http://localhost:3001/api/v1/cart/${cartId}`, null, {
-        headers: {
-          Authorization: localStorage.getItem('accessToken') || '',
-        },
         mode: 'cors',
         credentials: 'include',
       });
     } catch (err) {
       console.error('장바구니 삭제 실패:', err);
+      // 실패해도 이미 UI에서 제거되었으므로 롤백 하지 않음
+    } finally {
+      setIsDeleting(false);
     }
-
-    onDelete(cartId);
   };
 
   return (
@@ -140,22 +158,25 @@ export default function CartItem({
         <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
           <div className="flex items-center border border-gray-300 rounded text-sm">
             <button
-              className="px-3 py-1.5 sm:px-4 sm:py-2 hover:bg-gray-100"
+              className="px-3 py-1.5 sm:px-4 sm:py-2 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={() => handleQuantityChange('decrease')}
+              disabled={isUpdating || isDeleting}
             >
               -
             </button>
             <span className="px-4 sm:px-6">{item.quantity}</span>
             <button
-              className="px-3 py-1.5 sm:px-4 sm:py-2 hover:bg-gray-100"
+              className="px-3 py-1.5 sm:px-4 sm:py-2 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={() => handleQuantityChange('increase')}
+              disabled={isUpdating || isDeleting}
             >
               +
             </button>
           </div>
           <button
             onClick={() => deleteCart(item.cartId)}
-            className="text-xl text-gray-400 hover:text-gray-600 px-2  hover:bg-gray-100"
+            className="text-xl text-gray-400 hover:text-gray-600 px-2 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={isDeleting || isUpdating}
           >
             🗑️
           </button>

@@ -51,7 +51,6 @@ async function request<T>(
       if (!isRefreshing) {
         isRefreshing = true;
         return reTakeToken(url, options, true) as Promise<T>; // 토큰 재발급
-        // return await request<T>(url, options, true); // 토큰 재발급 후 현재 요청 재귀로 다시 재차 실행
       } else {
         // 토큰 재발급 처리 중이면 이전에 Unauthirized 에러로 인해 수행되지 않았던 작업들을 task 관리 Queue에 저장
         return new Promise<T>((resolve, reject) => {
@@ -160,6 +159,12 @@ async function reTakeToken(url: string, options: RequestInit, retry: boolean) {
   } catch (err) {
     retryQueue.forEach((job) => job.reject(err));
     retryQueue = [];
+
+    // 로그인 페이지로 리다이렉트
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('accessToken');
+      window.location.href = '/login';
+    }
     throw err;
   } finally {
     isRefreshing = false;
