@@ -8,6 +8,7 @@ import {
   JwtRefreshPayload,
 } from './interfaces/jwt-payload.interface';
 import { LoginDto } from './dto/login.dto';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -40,6 +41,20 @@ export class AuthService {
   async logout(userId: number): Promise<void> {
     this.logger.log(`User logged out with ID: ${userId}`);
     await this.userService.update(userId, { hashRefreshToken: null });
+  }
+
+  async getUserById(userId: number): Promise<Partial<User> | null> {
+    const user = await this.userService.findOne(userId);
+
+    if (!user) {
+      this.logger.warn(`User not found with ID: ${userId}`);
+      throw new UnauthorizedException('User not found');
+    }
+
+    return {
+      id: user.id,
+      email: user.email,
+    };
   }
 
   async refreshTokens(

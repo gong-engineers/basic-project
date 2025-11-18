@@ -5,6 +5,7 @@ import {
   Request,
   UseGuards,
   Res,
+  Get,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
@@ -43,6 +44,13 @@ export class AuthController {
   async logout(@Request() request: AccessRequest) {
     await this.authService.logout(request.user.id);
     return { message: 'Logout successful' };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  async getMe(@Request() request: AccessRequest) {
+    const userId = request.user.id;
+    return this.authService.getUserById(userId);
   }
 
   @UseGuards(JwtRefreshGuard)
