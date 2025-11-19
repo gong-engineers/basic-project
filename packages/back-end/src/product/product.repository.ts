@@ -25,26 +25,34 @@ export class ProductRepository {
   }
 
   async findAllProducts(query: GetProductDto) {
+    const { category, keyword, page = 1, limit = 10 } = query;
     const qb = this.productRepo.createQueryBuilder('product');
 
-    if (query.category) {
-      qb.andWhere('product.category = :category', {
-        category: `${query.category}`,
-      });
+    if (category) {
+      qb.andWhere('product.category = :category', { category });
     }
 
-    if (query.keyword) {
+    if (keyword) {
       qb.andWhere(
-        'product.name ILIKE :keyword OR product.description ILIKE :keyword)',
+        '(product.name ILIKE :keyword OR product.description ILIKE :keyword)',
         {
-          keyword: `%${query.keyword}%`,
+          keyword: `%${keyword}%`,
         },
       );
     }
 
     qb.orderBy('product.createdAt', 'DESC');
+    qb.skip((page - 1) * limit).take(limit);
 
-    return qb.getMany();
+    const [items, total] = await qb.getManyAndCount();
+
+    return {
+      items,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async findProduct(id: number) {

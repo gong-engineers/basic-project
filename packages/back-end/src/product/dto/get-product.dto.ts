@@ -1,9 +1,8 @@
 import { Categories, type Category } from '@basic-project/shared-types/item';
-import { IsIn, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsIn, IsInt, IsOptional, IsString, Min } from 'class-validator';
 
 export class GetProductDto {
-  // todo: 페이지네이션 관련 추가
-
   @IsOptional()
   @IsIn([...Categories])
   category?: Category;
@@ -11,4 +10,16 @@ export class GetProductDto {
   @IsOptional()
   @IsString()
   keyword?: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  page?: number = 1;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  limit?: number = 10;
 }
