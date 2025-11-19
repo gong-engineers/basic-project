@@ -33,7 +33,7 @@ export class CartService {
       // 로그인한 유저의 JWT 토큰에서 추출한 사용자
       const user = await this.userService.findOne(request.user.id);
 
-      // 로그인한 유저가 없거나 리프레시 토큰이 없으면 권한 거절
+      // 로그인한 유저가 없으면 권한 거절
       if (!user) {
         this.logger.warn(`Invalid user with ID: ${request.user.id}`);
         throw new UnauthorizedException('Access denied');
@@ -93,7 +93,7 @@ export class CartService {
       // 로그인한 유저의 JWT 토큰에서 추출한 사용자
       const user = await this.userService.findOne(request.user.id);
 
-      // 로그인한 유저가 없거나 리프레시 토큰이 없으면 권한 거절
+      // 로그인한 유저가 없으면 권한 거절
       if (!user) {
         this.logger.warn(`Invalid user with ID: ${request.user.id}`);
         throw new UnauthorizedException('Access denied');
@@ -118,7 +118,7 @@ export class CartService {
       // 로그인한 유저의 JWT 토큰에서 추출한 사용자
       const user = await this.userService.findOne(request.user.id);
 
-      // 로그인한 유저가 없거나 리프레시 토큰이 없으면 권한 거절
+      // 로그인한 유저가 없으면 권한 거절
       if (!user) {
         this.logger.warn(`Invalid user with ID: ${request.user.id}`);
         throw new UnauthorizedException('Access denied');
@@ -164,7 +164,7 @@ export class CartService {
       // 로그인한 유저의 JWT 토큰에서 추출한 사용자
       const user = await this.userService.findOne(request.user.id);
 
-      // 로그인한 유저가 없거나 리프레시 토큰이 없으면 권한 거절
+      // 로그인한 유저가 없으면 권한 거절
       if (!user) {
         this.logger.warn(`Invalid user with ID: ${request.user.id}`);
         throw new UnauthorizedException('Access denied');
