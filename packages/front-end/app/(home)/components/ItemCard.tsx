@@ -37,14 +37,13 @@ function ItemCard(props: Props) {
     <Link href={`/products/${id}`}>
       <div className="outline outline-gray-200 p-3 rounded-lg flex flex-col w-full h-full">
         {/* 이미지 */}
-        <div className="relative flex items-center justify-center bg-gray-100 w-full h-48 rounded-lg overflow-hidden">
+        <div className="relative flex items-center justify-center bg-gray-100 w-full aspect-5/3 rounded-lg overflow-hidden">
           {images && !isEmpty(images) ? (
             <Image
               src={images[0]}
               alt="상품이미지"
-              width={512}
-              height={240}
-              loading="eager"
+              width={500}
+              height={300}
               className="object-contain object-center"
             />
           ) : (
