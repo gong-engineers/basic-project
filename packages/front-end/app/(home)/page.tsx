@@ -1,87 +1,120 @@
 'use client';
 
-import { client } from '@/lib/api';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { item } from '@basic-project/shared-types';
-import Link from 'next/link';
+import { debounce, isEmpty } from 'lodash-es';
+import { Search, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import ItemCard from './components/ItemCard';
-
-// 임시로 만든 로그인 응답 타입
-interface LoginResponse {
-  accessToken: string;
-}
+import { fetchProducts, GetProductsParams } from './utils/product';
 
 export default function Home() {
-  const [productList, setProductList] = useState<item.Product[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('accessToken') !== null;
-    }
-    return false;
-  });
+  const [productList, setProductList] = useState<item.Product[]>([]);
+  const [page, setPage] = useState(1);
+  const [keyword, setKeyword] = useState('');
+  // TODO: category 추가
+  const [totalPages, setTotalPages] = useState(0);
 
   // TODO: 서버 패칭하도록 수정 필요
   useEffect(() => {
-    const fetchProducts = async () => {
+    const loadProducts = debounce(async (keyword: string, page: number) => {
       try {
         setIsLoading(true);
-        const data = await client.get<null, item.Product[]>(
-          'http://localhost:3001/api/v1/products',
-        );
 
-        setProductList(data);
+        // TODO: category 추가
+        const params: GetProductsParams = { keyword, page };
+        const data = await fetchProducts(params);
+
+        setProductList(data.items);
+        setTotalPages(data.totalPages);
       } catch (error) {
         console.error('리스트 조회 실패', error);
       } finally {
         setIsLoading(false);
       }
+    }, 300);
+
+    loadProducts(keyword, page);
+
+    return () => {
+      loadProducts.cancel();
     };
-
-    fetchProducts();
-  }, []);
-
-  // 로그인 기능이 합쳐지기 전까지 임의 로그인 핸들러 추가
-  const handleLogin = async () => {
-    try {
-      const loginResponse = await client.post<
-        { email: string; password: string },
-        LoginResponse
-      >(
-        'http://localhost:3001/auth/login',
-        { email: 'test@gmail.com', password: 'testtest' },
-        {
-          mode: 'cors',
-          credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
-        },
-      );
-
-      // 로그인 후 AccessToken을 localstorage에 저장
-      localStorage.setItem(
-        'accessToken',
-        'Bearer ' + loginResponse.accessToken,
-      );
-
-      setIsLoggedIn(true);
-    } catch (err) {
-      console.error('로그인 실패:', err);
-    }
-  };
+  }, [keyword, page]);
 
   return (
-    <div>
-      {/* TODO: 반응형에 맞춰 아이템 사이즈와 여백 조정 필요 & 다른 화면과 통일 */}
-      <div className="max-w-7xl mx-auto px-4 lg:px-8 py-8 flex flex-wrap gap-4">
+    <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* 검색창 */}
+        <div className="relative w-full">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            type="text"
+            placeholder="검색어를 입력하세요"
+            value={keyword}
+            onChange={(e) => {
+              setKeyword(e.target.value);
+              setPage(1);
+            }}
+            className="w-full pl-10 pr-10 sm:pr-12"
+          />
+          {keyword && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                setKeyword('');
+                setPage(1);
+              }}
+              className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 bg-transparent hover:bg-transparent"
+            >
+              <X />
+            </Button>
+          )}
+        </div>
+
+        {/* 상품 리스트 */}
         {isLoading ? (
           <div className="flex justify-center items-center w-full py-20">
-            <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500" />
+            <div className="animate-spin rounded-full h-20 w-20 border-t-2 border-b-2 border-blue-500" />
           </div>
         ) : (
           <>
-            {productList.map((product) => (
-              <ItemCard key={product.id} item={product} />
-            ))}
+            {!isEmpty(productList) ? (
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {productList.map((product) => (
+                    <ItemCard key={product.id} item={product} />
+                  ))}
+                </div>
+
+                {/* 페이지네이션 */}
+                <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 mt-6">
+                  <Button
+                    variant="outline"
+                    disabled={page <= 1}
+                    onClick={() => setPage((p) => p - 1)}
+                  >
+                    이전
+                  </Button>
+
+                  <span className="text-sm text-gray-700 px-2">
+                    {page} / {totalPages}
+                  </span>
+
+                  <Button
+                    variant="outline"
+                    disabled={page >= totalPages}
+                    onClick={() => setPage((p) => p + 1)}
+                  >
+                    다음
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <div className="text-center py-20">검색 결과가 없습니다.</div>
+            )}
           </>
         )}
       </div>
