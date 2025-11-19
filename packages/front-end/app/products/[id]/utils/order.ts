@@ -1,11 +1,28 @@
+import { checkDiscountPeriod } from '@/utils/date.util';
 import { convertCategory } from '@/utils/item.util';
 import { cart, item } from '@basic-project/shared-types';
 
 export function buyNow(product: item.Product, quantity: number) {
-  const { id, name, price, discountPrice, images, category } = product;
+  const {
+    id,
+    name,
+    price,
+    discountPrice,
+    discountStartDate,
+    discountEndDate,
+    images,
+    category,
+  } = product;
+
+  const isDiscountActive = checkDiscountPeriod(
+    discountStartDate,
+    discountEndDate,
+  );
 
   const unitPrice =
-    discountPrice && discountPrice !== 0 ? discountPrice : price;
+    discountPrice && discountPrice !== 0 && isDiscountActive
+      ? discountPrice
+      : price;
 
   const buyNowItem: cart.CartInfoResponse = {
     cartId: 0, // 기본값

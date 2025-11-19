@@ -22,3 +22,26 @@ export const formatDatePeriod = (
 
   return null;
 };
+
+export const checkDiscountPeriod = (
+  startDate: string | null,
+  endDate: string | null,
+) => {
+  const today = new Date();
+  const discountStart = startDate ? new Date(startDate) : null;
+  const discountEnd = endDate ? new Date(endDate) : null;
+
+  if (discountStart && discountEnd) {
+    return today >= discountStart && today <= discountEnd;
+  }
+
+  if (discountStart && !discountEnd) {
+    return today >= discountStart;
+  }
+
+  if (!discountStart && discountEnd) {
+    return today <= discountEnd;
+  }
+
+  return false;
+};

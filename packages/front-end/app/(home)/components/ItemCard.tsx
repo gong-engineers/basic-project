@@ -1,4 +1,4 @@
-import { formatDatePeriod } from '@/utils/date.util';
+import { checkDiscountPeriod, formatDatePeriod } from '@/utils/date.util';
 import { convertCategory } from '@/utils/item.util';
 import { item } from '@basic-project/shared-types';
 import { isEmpty } from 'lodash-es';
@@ -32,6 +32,10 @@ function ItemCard(props: Props) {
     discountStartDate,
     discountEndDate,
   );
+  const isDiscountActive = checkDiscountPeriod(
+    discountStartDate,
+    discountEndDate,
+  );
 
   return (
     <Link href={`/products/${id}`}>
@@ -62,7 +66,7 @@ function ItemCard(props: Props) {
           <p className="text-gray-500 text-sm flex-1">{description}</p>
           {/* 가격 및 할인 정보 */}
           <div className="flex items-center justify-between mt-3 h-10">
-            {discountPrice !== 0 ? (
+            {discountPrice !== 0 && isDiscountActive ? (
               <div>
                 <div className="flex gap-1 items-center">
                   <span className="text-base font-bold">

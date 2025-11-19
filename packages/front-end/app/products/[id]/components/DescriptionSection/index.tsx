@@ -2,7 +2,7 @@
 
 import { useAuthStore } from '@/stores/authStore';
 import { isAuthError } from '@/utils/auth.util';
-import { formatDatePeriod } from '@/utils/date.util';
+import { checkDiscountPeriod, formatDatePeriod } from '@/utils/date.util';
 import { normalizeError } from '@/utils/error.util';
 import { convertCategory } from '@/utils/item.util';
 import { item } from '@basic-project/shared-types';
@@ -41,6 +41,10 @@ function DescriptionSection(props: Props) {
     textColor: categoryTextColor,
   } = convertCategory(category);
   const formattedDiscountPeriod = formatDatePeriod(
+    discountStartDate,
+    discountEndDate,
+  );
+  const isDiscountActive = checkDiscountPeriod(
     discountStartDate,
     discountEndDate,
   );
@@ -89,7 +93,7 @@ function DescriptionSection(props: Props) {
           <div className="text-xl font-semibold">{name}</div>
         </div>
         <div className="flex items-center justify-between">
-          {discountPrice !== 0 ? (
+          {discountPrice !== 0 && isDiscountActive ? (
             <div>
               <div className="flex gap-1 items-center">
                 <span className="text-base font-bold">
