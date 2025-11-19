@@ -62,9 +62,7 @@ export class OrderService {
 
       // 로그인한 유저가 없거나 리프레시 토큰이 없으면 권한 거절
       if (!user) {
-        this.logger.warn(
-          `Invalid refresh token for user with ID: ${request.user.id}`,
-        );
+        this.logger.warn(`Invalid user with ID: ${request.user.id}`);
         throw new UnauthorizedException('Access denied');
       }
 
@@ -218,9 +216,7 @@ export class OrderService {
 
       // 로그인한 유저가 없거나 리프레시 토큰이 없으면 권한 거절
       if (!user) {
-        this.logger.warn(
-          `Invalid refresh token for user with ID: ${request.user.id}`,
-        );
+        this.logger.warn(`Invalid user with ID: ${request.user.id}`);
         throw new UnauthorizedException('Access denied');
       }
 
@@ -276,9 +272,7 @@ export class OrderService {
 
       // 로그인한 유저가 없거나 리프레시 토큰이 없으면 권한 거절
       if (!user) {
-        this.logger.warn(
-          `Invalid refresh token for user with ID: ${request.user.id}`,
-        );
+        this.logger.warn(`Invalid user with ID: ${request.user.id}`);
         throw new UnauthorizedException('Access denied');
       }
 
