@@ -35,16 +35,16 @@ function ItemCard(props: Props) {
 
   return (
     <Link href={`/products/${id}`}>
-      <div className="outline outline-gray-200 w-70 p-3 rounded-lg">
+      <div className="outline outline-gray-200 p-3 rounded-lg flex flex-col w-full h-full">
         {/* 이미지 */}
-        <div className="relative flex items-center justify-center bg-gray-100 w-64 h-30 rounded-lg overflow-hidden">
+        <div className="relative flex items-center justify-center bg-gray-100 w-full h-48 rounded-lg overflow-hidden">
           {images && !isEmpty(images) ? (
             <Image
               src={images[0]}
               alt="상품이미지"
               width={512}
               height={240}
-              priority
+              loading="eager"
               className="object-contain object-center"
             />
           ) : (
@@ -58,9 +58,9 @@ function ItemCard(props: Props) {
           </div>
         </div>
 
-        <div className="mt-2">
+        <div className="mt-2 flex flex-col flex-1">
           <h3 className="font-bold text-sm">{name}</h3>
-          <p className="text-gray-500 text-sm">{description}</p>
+          <p className="text-gray-500 text-sm flex-1">{description}</p>
           {/* 가격 및 할인 정보 */}
           <div className="flex items-center justify-between mt-3 h-10">
             {discountPrice !== 0 ? (
