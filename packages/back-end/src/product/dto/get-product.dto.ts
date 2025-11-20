@@ -20,5 +20,5 @@ export class GetProductDto {
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  limit: number = 10;
+  limit: number = 12;
 }
