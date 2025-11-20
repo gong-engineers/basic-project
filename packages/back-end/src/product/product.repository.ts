@@ -25,7 +25,7 @@ export class ProductRepository {
   }
 
   async findAllProducts(query: GetProductDto) {
-    const { category, keyword, page = 1, limit = 10 } = query;
+    const { category, keyword, page = 1, limit = 12 } = query;
     const qb = this.productRepo.createQueryBuilder('product');
 
     if (category) {

@@ -11,11 +11,11 @@ function ImageSection(props: Props) {
   const { images } = props;
 
   return (
-    <div className="w-1/2 max-w-xl flex flex-col gap-4">
+    <div className="w-full md:w-1/2 flex flex-col gap-4">
       {images && !isEmpty(images) ? (
         <CustomGallery images={images!} />
       ) : (
-        <div className="relative flex items-center justify-center bg-gray-100 aspect-4/3 rounded-lg">
+        <div className="relative flex items-center justify-center bg-gray-100 aspect-5/3 rounded-lg">
           <span className="text-4xl">📦</span>
         </div>
       )}

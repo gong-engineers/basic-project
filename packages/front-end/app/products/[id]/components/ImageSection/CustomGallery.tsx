@@ -15,7 +15,7 @@ function CustomGallery(props: Props) {
   }));
 
   return (
-    <div className="aspect-4/3 rounded-xl">
+    <div className="aspect-5/3 rounded-xl">
       <ImageGallery
         items={galleryItems}
         showPlayButton={false}

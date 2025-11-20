@@ -22,9 +22,10 @@ async function ProductPage(props: Props) {
   const product: item.Product = await res.json();
 
   return (
-    <div className="min-h-screen bg-white py-4 sm:py-8">
-      <div className="flex gap-8 max-w-7xl mx-auto px-4 lg:px-8">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="flex flex-col md:flex-row gap-6 divide-gray-300">
         <ImageSection images={product.images} />
+        <hr className="w-full md:hidden" />
         <DescriptionSection product={product} />
       </div>
     </div>

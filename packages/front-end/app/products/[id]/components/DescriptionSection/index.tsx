@@ -82,7 +82,7 @@ function DescriptionSection(props: Props) {
   };
 
   return (
-    <div className="flex flex-col divide-gray-300 gap-4 w-1/2">
+    <div className="w-full md:w-1/2 flex flex-col gap-4 divide-gray-300">
       <div className="flex flex-col gap-5">
         <div className="flex flex-col gap-1">
           <div
