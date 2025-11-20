@@ -1,12 +1,28 @@
 import { client } from '@/lib/api';
+import { checkDiscountPeriod } from '@/utils/date.util';
 import { convertCategory } from '@/utils/item.util';
 import { cart, common, item } from '@basic-project/shared-types';
 
 export async function addToCart(product: item.Product, quantity: number) {
-  const { id, name, price, discountPrice, category } = product;
+  const {
+    id,
+    name,
+    price,
+    discountPrice,
+    discountStartDate,
+    discountEndDate,
+    category,
+  } = product;
+
+  const isDiscountActive = checkDiscountPeriod(
+    discountStartDate,
+    discountEndDate,
+  );
 
   const unitPrice =
-    discountPrice && discountPrice !== 0 ? discountPrice : price;
+    discountPrice && discountPrice !== 0 && isDiscountActive
+      ? discountPrice
+      : price;
 
   const body: cart.CartInRequest = {
     categoryId: 0, // 기본값
