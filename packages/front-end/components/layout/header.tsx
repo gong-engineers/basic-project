@@ -43,10 +43,7 @@ export default function Header() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem asChild>
-                      <Link href="#">내 정보</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="#">주문 내역</Link>
+                      <Link href="/orderHistory">주문 내역</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <div onClick={logout}>로그아웃</div>

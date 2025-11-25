@@ -98,14 +98,18 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
+    <div className="flex m-32 items-center justify-center">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
         <h1 className="mb-6 text-center text-3xl font-bold text-slate-700">
-          Login
+          로그인
         </h1>
 
-        <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-          <div>
+        <form
+          onSubmit={handleSubmit}
+          noValidate
+          className="flex flex-col gap-8"
+        >
+          <div className="flex flex-col">
             <label className="mb-2 block text-sm font-medium text-gray-700">
               이메일
             </label>
@@ -121,7 +125,7 @@ export default function LoginPage() {
               className={`w-full rounded-md border ${
                 emailError ? 'border-red-500' : 'border-gray-200'
               } px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300`}
-              placeholder="abc@example.com"
+              placeholder="이메일을 입력해주세요."
               required
             />
             {emailError && (
@@ -151,7 +155,7 @@ export default function LoginPage() {
                 className={`w-full rounded-md border ${
                   passwordError ? 'border-red-500' : 'border-gray-200'
                 } px-3 py-2 pr-20 focus:outline-none focus:ring-2 focus:ring-blue-300`}
-                placeholder="최소 8자 이상 입력하세요."
+                placeholder="8자 이상의 비밀번호를 입력해주세요."
                 required
               />
               <button
