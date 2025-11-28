@@ -52,4 +52,4 @@ jobs:
           context: .
           file: ./packages/back-end/Dockerfile
           push: true
-          tags: ${{ env.ECR_REPOSITORY_URI }}/back-end:${{ env.IMAGE_TAG }}
+          tags: ${{ env.ECR_REPOSITORY_URI }}:${{ env.IMAGE_TAG }}
