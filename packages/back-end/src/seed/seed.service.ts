@@ -63,6 +63,7 @@ export class SeedService {
     this.logger.log('Seeding users...');
     const usersToSave = await Promise.all(
       USERS_DATA.map(async (user) => {
+        if (!user.password) return user;
         const hashedPassword = await bcrypt.hash(user.password, 10);
         return { ...user, password: hashedPassword };
       }),

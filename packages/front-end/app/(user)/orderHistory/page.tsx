@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { client } from '../../lib/api';
+import { client } from '../../../lib/api';
 import type { order, common } from '@basic-project/shared-types';
 import GroupOrderItem from './components/GroupOrderItem';
 
@@ -14,6 +14,8 @@ interface GroupedOrder {
   deliveryFee: number;
   createdAt: Date;
 }
+
+const API_URL = process.env.API_URL || 'http://localhost:3001';
 
 export default function OrderHistory() {
   const [orderList, setOrderList] = useState<order.OrderInfoResponse[]>([]);
@@ -38,7 +40,7 @@ export default function OrderHistory() {
         const orderListResponse = await client.get<
           null,
           common.ResponseDto<order.OrderInfoResponse[]>
-        >('http://localhost:3001/api/v1/order', null, {
+        >(`${API_URL}/api/v1/order`, null, {
           mode: 'cors',
           credentials: 'include',
         });
@@ -127,7 +129,7 @@ export default function OrderHistory() {
         order.PurchaseConfirmRequest,
         common.ResponseDto<null>
       >(
-        'http://localhost:3001/api/v1/order/purchase-confirm',
+        `${API_URL}/api/v1/order/purchase-confirm`,
         {
           orderId: orderId,
           purchaseConfirm: 'Y',

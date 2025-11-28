@@ -3,8 +3,10 @@
 import { useState, useEffect, useRef } from 'react';
 import type { cart, common } from '@basic-project/shared-types';
 import { useRouter } from 'next/navigation';
-import { client } from '../../lib/api';
+import { client } from '../../../lib/api';
 import CartItem from './components/CartItem';
+
+const API_URL = process.env.API_URL || 'http://localhost:3001';
 
 export default function Carts() {
   const [cartList, setCartList] = useState<cart.CartInfoResponse[]>([]); // 장바구니 리스트 상태 관리
@@ -29,7 +31,7 @@ export default function Carts() {
         const cartListResponse = await client.get<
           null,
           common.ResponseDto<cart.CartInfoResponse[]>
-        >('http://localhost:3001/api/v1/cart', null, {
+        >(`${API_URL}/api/v1/cart`, null, {
           mode: 'cors',
           credentials: 'include',
         });

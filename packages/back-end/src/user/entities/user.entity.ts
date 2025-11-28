@@ -24,6 +24,9 @@ export class User {
   @Column({ type: 'varchar', nullable: true })
   hashRefreshToken?: string | null;
 
+  @Column({ type: 'enum', enum: ['USER', 'ADMIN'], default: 'USER' })
+  role: 'USER' | 'ADMIN';
+
   @CreateDateColumn()
   createdAt: Date;
 

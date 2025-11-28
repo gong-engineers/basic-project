@@ -1,3 +1,5 @@
+const API_URL = process.env.API_URL || 'http://localhost:3001';
+
 // API 요청시 인증 토큰을 자동으로 처리하는 유틸리티
 export async function fetchWithAuth(url: string, options: RequestInit = {}) {
   // Access Token 가져오기
@@ -20,16 +22,13 @@ export async function fetchWithAuth(url: string, options: RequestInit = {}) {
       }
 
       // Refresh Token으로 새 Access Token 요청
-      const refreshResponse = await fetch(
-        'http://localhost:3001/auth/refresh',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${refreshToken}`,
-          },
+      const refreshResponse = await fetch(`${API_URL}/auth/refresh`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${refreshToken}`,
         },
-      );
+      });
 
       if (!refreshResponse.ok) {
         // Refresh Token도 만료된 경우 로그아웃 처리
@@ -58,7 +57,7 @@ export async function fetchWithAuth(url: string, options: RequestInit = {}) {
 // 로그아웃 함수
 export async function logout() {
   try {
-    const response = await fetchWithAuth('http://localhost:3001/auth/logout', {
+    const response = await fetchWithAuth(`${API_URL}/auth/logout`, {
       method: 'POST',
     });
 

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import type { cart } from '@basic-project/shared-types';
 
 type DeliveryMethod = 'same-day' | 'standard';
+const API_URL = process.env.API_URL || 'http://localhost:3001';
 
 interface SavedCard {
   id: number;
@@ -353,7 +354,7 @@ export default function Orders() {
 
       // API 호출
       const token = localStorage.getItem('accessToken');
-      const response = await fetch('http://localhost:3001/api/v1/order', {
+      const response = await fetch(`${API_URL}/api/v1/order`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

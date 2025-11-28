@@ -1,11 +1,12 @@
 import { client } from '@/lib/api';
 import { create } from 'zustand';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const API_URL = process.env.API_URL || 'http://localhost:3001';
 
 interface User {
   id: number;
   email: string;
+  role: 'USER' | 'ADMIN';
 }
 
 interface LoginDto {

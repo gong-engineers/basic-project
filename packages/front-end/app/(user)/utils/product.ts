@@ -1,6 +1,8 @@
 import { client } from '@/lib/api';
 import { item } from '@basic-project/shared-types';
 
+const API_URL = process.env.API_URL || 'http://localhost:3001';
+
 export interface GetProductsParams {
   keyword?: string;
   category?: string;
@@ -30,7 +32,7 @@ export async function fetchProducts(params: GetProductsParams) {
     query.append('page', page.toString());
   }
 
-  const url = `http://localhost:3001/api/v1/products?${query.toString()}`;
+  const url = `${API_URL}/api/v1/products?${query.toString()}`;
 
   const data = await client.get<null, GetProductsResponse>(url);
   return data;

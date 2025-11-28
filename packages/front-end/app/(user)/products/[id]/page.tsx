@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import DescriptionSection from './components/DescriptionSection';
 import ImageSection from './components/ImageSection';
 
+const API_URL = process.env.API_URL || 'http://localhost:3001';
+
 interface Props {
   params: Promise<{ id: string }>;
 }
@@ -10,10 +12,9 @@ interface Props {
 async function ProductPage(props: Props) {
   const resolvedParams = await props.params;
 
-  const res = await fetch(
-    `${process.env.API_URL}/api/v1/products/${resolvedParams.id}`,
-    { cache: 'no-store' },
-  );
+  const res = await fetch(`${API_URL}/api/v1/products/${resolvedParams.id}`, {
+    cache: 'no-store',
+  });
 
   if (!res.ok) {
     return notFound();

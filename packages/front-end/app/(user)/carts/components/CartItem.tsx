@@ -2,7 +2,7 @@
 
 import React from 'react';
 import type { cart, common } from '@basic-project/shared-types';
-import { client } from '../../../lib/api';
+import { client } from '../../../../lib/api';
 
 interface CartItemProps {
   item: cart.CartInfoResponse;
