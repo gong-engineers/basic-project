@@ -12,6 +12,10 @@ on:
       - '.github/workflows/ci.yml'
       - 'packages/back-end/**'
 
+env:
+  ECR_REPOSITORY_URI: 672318378170.dkr.ecr.us-east-1.amazonaws.com/basic-project
+  IMAGE_TAG: latest
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -32,6 +36,14 @@ jobs:
         run: pnpm --filter back-end lint
       - name: Test back-end package
         run: pnpm --filter back-end test
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v5.1.1
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Build Docker Image
@@ -39,5 +51,5 @@ jobs:
         with:
           context: .
           file: ./packages/back-end/Dockerfile
-          push: false
-          tags: basic-project/back-end:latest
+          push: true
+          tags: ${{ env.ECR_REPOSITORY_URI }}/back-end:${{ env.IMAGE_TAG }}
