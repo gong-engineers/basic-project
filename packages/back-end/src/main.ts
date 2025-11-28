@@ -43,6 +43,13 @@ async function bootstrap() {
     }),
   });
 
+  const corsOrigin = process.env.CORS_ORIGIN;
+
+  app.enableCors({
+    origin: corsOrigin ? corsOrigin.split(',') : '*',
+    credentials: true,
+  });
+
   // 쿠키 정보 활용을 위한 쿠키 파서 미들웨어 등록
   app.use(cookieParser()); // <- HttpOnly 쿠키에 저장될 RefreshToken을 파싱하기 위해서 사용하였습니다.
 

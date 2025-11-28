@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL;
+export const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  'https://ng29j2jisc.us-east-1.awsapprunner.com';
 
 export class APIError extends Error {
   status: number;
