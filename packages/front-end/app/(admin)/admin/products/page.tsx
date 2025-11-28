@@ -15,7 +15,7 @@ import { ChevronLeft, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-const API_URL = process.env.API_URL || 'http://localhost:3001';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 export default function Page() {
   const [mounted, setMounted] = useState(false);
