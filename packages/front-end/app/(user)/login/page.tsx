@@ -98,7 +98,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex m-32 items-center justify-center">
+    <div className="flex items-center my-32 mx-4 justify-center">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
         <h1 className="mb-6 text-center text-3xl font-bold text-slate-700">
           로그인
@@ -122,7 +122,7 @@ export default function LoginPage() {
                 setSubmitError(null);
               }}
               onBlur={validateEmail}
-              className={`w-full rounded-md border ${
+              className={`text-sm w-full rounded-md border ${
                 emailError ? 'border-red-500' : 'border-gray-200'
               } px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300`}
               placeholder="이메일을 입력해주세요."
@@ -152,7 +152,7 @@ export default function LoginPage() {
                   }
                 }}
                 aria-invalid={passwordError ? true : undefined}
-                className={`w-full rounded-md border ${
+                className={`w-full rounded-md border text-sm ${
                   passwordError ? 'border-red-500' : 'border-gray-200'
                 } px-3 py-2 pr-20 focus:outline-none focus:ring-2 focus:ring-blue-300`}
                 placeholder="8자 이상의 비밀번호를 입력해주세요."

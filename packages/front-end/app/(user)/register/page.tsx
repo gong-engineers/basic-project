@@ -18,8 +18,6 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  console.log(API_URL);
-
   // 회원가입 폼 제출 시 실행되는 함수
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -58,7 +56,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex m-32 items-center justify-center">
+    <div className="flex my-32 mx-4 items-center justify-center">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
         <h1 className="mb-6 text-center text-2xl font-bold text-slate-700">
           회원가입
@@ -73,14 +71,14 @@ export default function RegisterPage() {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full rounded-md border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="text-sm w-full rounded-md border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
               placeholder="홍길동"
               required
             />
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">
+            <label className="text-sm mb-2 block text-sm font-medium text-gray-700">
               전화번호
             </label>
             <input
@@ -93,7 +91,7 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">
+            <label className="text-sm mb-2 block text-sm font-medium text-gray-700">
               이메일
             </label>
             <input
@@ -107,7 +105,7 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">
+            <label className="text-sm mb-2 block text-sm font-medium text-gray-700">
               비밀번호
             </label>
             <input
