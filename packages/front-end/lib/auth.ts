@@ -32,10 +32,6 @@ export async function fetchWithAuth(url: string, options: RequestInit = {}) {
 
       if (!refreshResponse.ok) {
         // Refresh Token도 만료된 경우 로그아웃 처리
-        sessionStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('userName');
-        window.location.href = '/login';
         throw new Error('세션이 만료되었습니다. 다시 로그인해주세요.');
       }
 
@@ -63,10 +59,6 @@ export async function logout() {
 
     if (response.ok) {
       // 모든 인증 관련 데이터 삭제
-      sessionStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('userName');
-      window.location.href = '/login';
     }
   } catch (error) {
     console.error('로그아웃 실패:', error);

@@ -137,7 +137,6 @@ async function reTakeToken(url: string, options: RequestInit, retry: boolean) {
     const refreshResponse = await fetch(`${API_URL}/auth/refresh`, {
       method: 'POST',
       credentials: 'include',
-      mode: 'cors',
     });
 
     // RefreshToken 재발급 요청에 실패했다면 에러 처리
@@ -166,8 +165,7 @@ async function reTakeToken(url: string, options: RequestInit, retry: boolean) {
 
     // 로그인 페이지로 리다이렉트
     if (typeof window !== 'undefined') {
-      localStorage.removeItem('accessToken');
-      window.location.href = '/login';
+      console.log(err);
     }
     throw err;
   } finally {
