@@ -39,4 +39,9 @@ export class UserController {
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
   }
+
+  @Get(':email')
+  findOneByEmail(@Param('email') email: string) {
+    return this.userService.findByEmail(email);
+  }
 }

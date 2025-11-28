@@ -8,6 +8,7 @@ import {
   JwtRefreshPayload,
 } from './interfaces/jwt-payload.interface';
 import { LoginDto } from './dto/login.dto';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -42,30 +43,50 @@ export class AuthService {
     await this.userService.update(userId, { hashRefreshToken: null });
   }
 
+  async getUserById(userId: number): Promise<Partial<User> | null> {
+    const user = await this.userService.findOne(userId);
+
+    if (!user) {
+      this.logger.warn(`User not found with ID: ${userId}`);
+      throw new UnauthorizedException('User not found');
+    }
+
+    return {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    };
+  }
+
   async refreshTokens(
     userId: number,
     refreshToken: string,
-  ): Promise<{ accessToken: string }> {
-    const user = await this.userService.findOne(userId);
-    if (!user || !user.hashRefreshToken) {
-      this.logger.warn(`Invalid refresh token for user with ID: ${userId}`);
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    try {
+      const user = await this.userService.findOne(userId);
+      if (!user || !user.hashRefreshToken) {
+        this.logger.warn(`Invalid refresh token for user with ID: ${userId}`);
+        throw new UnauthorizedException('Access denied');
+      }
+
+      const isRefreshTokenMatching = await bcrypt.compare(
+        refreshToken,
+        user.hashRefreshToken,
+      );
+      if (!isRefreshTokenMatching) {
+        this.logger.warn(`Refresh token mismatch for user with ID: ${userId}`);
+        throw new UnauthorizedException('Access denied');
+      }
+
+      const tokens = await this.getTokens(user.id, user.email);
+      await this.updateRefreshToken(user.id, tokens.refreshToken);
+
+      this.logger.log(`Refresh tokens issued for user with ID: ${userId}`);
+      return tokens;
+    } catch (error) {
+      this.logger.error(`Error refreshTokens: ${error}`);
       throw new UnauthorizedException('Access denied');
     }
-
-    const isRefreshTokenMatching = await bcrypt.compare(
-      refreshToken,
-      user.hashRefreshToken,
-    );
-    if (!isRefreshTokenMatching) {
-      this.logger.warn(`Refresh token mismatch for user with ID: ${userId}`);
-      throw new UnauthorizedException('Access denied');
-    }
-
-    const tokens = await this.getTokens(user.id, user.email);
-    await this.updateRefreshToken(user.id, tokens.refreshToken);
-
-    this.logger.log(`Refresh tokens issued for user with ID: ${userId}`);
-    return tokens;
   }
 
   private async getTokens(userId: number, email: string) {

@@ -1,5 +1,13 @@
 {
   "$schema": "https://turborepo.com/schema.json",
+  "globalEnv": [
+    "DATABASE_URL",
+    "NODE_ENV",
+    "JWT_ACCESS_SECRET",
+    "JWT_ACCESS_EXPIRATION",
+    "JWT_REFRESH_SECRET",
+    "JWT_REFRESH_EXPIRATION"
+  ],
   "globalDependencies": ["**/.env.*local"],
   "tasks": {
     "dev": {
