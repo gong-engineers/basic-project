@@ -45,11 +45,6 @@ async function bootstrap() {
 
   const corsOrigin = process.env.CORS_ORIGIN;
 
-  app.enableCors({
-    origin: corsOrigin ? corsOrigin.split(',') : '*',
-    credentials: true,
-  });
-
   // 쿠키 정보 활용을 위한 쿠키 파서 미들웨어 등록
   app.use(cookieParser()); // <- HttpOnly 쿠키에 저장될 RefreshToken을 파싱하기 위해서 사용하였습니다.
 
@@ -61,7 +56,7 @@ async function bootstrap() {
 
   // CORS 허용
   app.enableCors({
-    origin: 'http://localhost:3000', // 모든 도메인 허용
+    origin: corsOrigin ? corsOrigin.split(',') : '*', // 모든 도메인 허용
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS', 'PUT', 'HEAD'], // CORS 허용할 메소드 설정
