@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 import DescriptionSection from './components/DescriptionSection';
 import ImageSection from './components/ImageSection';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+import { API_URL } from '@/lib/api/utils';
 
 interface Props {
   params: Promise<{ id: string }>;

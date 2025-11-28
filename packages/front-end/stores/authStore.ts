@@ -1,7 +1,6 @@
 import { client } from '@/lib/api';
 import { create } from 'zustand';
-
-const API_URL = process.env.API_URL || 'http://localhost:3001';
+import { API_URL } from '@/lib/api/utils';
 
 interface User {
   id: number;

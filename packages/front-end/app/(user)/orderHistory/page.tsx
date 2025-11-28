@@ -15,7 +15,7 @@ interface GroupedOrder {
   createdAt: Date;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+import { API_URL } from '@/lib/api/utils';
 
 export default function OrderHistory() {
   const [orderList, setOrderList] = useState<order.OrderInfoResponse[]>([]);

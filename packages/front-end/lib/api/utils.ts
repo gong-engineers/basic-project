@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 
+export const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export class APIError extends Error {
   status: number;
   data: unknown;
@@ -130,7 +132,7 @@ let retryQueue: {
 async function reTakeToken(url: string, options: RequestInit, retry: boolean) {
   try {
     // RefreshToken 재발급 요청
-    const refreshResponse = await fetch('http://localhost:3001/auth/refresh', {
+    const refreshResponse = await fetch(`${API_URL}/auth/refresh`, {
       method: 'POST',
       credentials: 'include',
       mode: 'cors',

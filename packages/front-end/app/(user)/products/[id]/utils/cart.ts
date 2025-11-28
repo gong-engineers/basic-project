@@ -2,6 +2,7 @@ import { client } from '@/lib/api';
 import { checkDiscountPeriod } from '@/utils/date.util';
 import { convertCategory } from '@/utils/item.util';
 import { cart, common, item } from '@basic-project/shared-types';
+import { API_URL } from '@/lib/api/utils';
 
 export async function addToCart(product: item.Product, quantity: number) {
   const {
@@ -42,7 +43,7 @@ export async function addToCart(product: item.Product, quantity: number) {
     const res = await client.post<
       cart.CartInRequest,
       common.ResponseDto<cart.CartInfoResponse>
-    >('http://localhost:3001/api/v1/cart', body, {
+    >(`${API_URL}/api/v1/cart`, body, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: localStorage.getItem('accessToken') || '',

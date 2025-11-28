@@ -4,7 +4,7 @@
     "turbo": "^2.5.8"
   },
   "scripts": {
-    "prepare": "if [ -z \"$CI\" ]; then husky; fi",
+    "prepare": "husky",
     "dev": "turbo run dev",
     "build": "turbo run build",
     "lint": "turbo run lint",

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { client } from '../../../lib/api';
 import CartItem from './components/CartItem';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+import { API_URL } from '@/lib/api/utils';
 
 export default function Carts() {
   const [cartList, setCartList] = useState<cart.CartInfoResponse[]>([]); // 장바구니 리스트 상태 관리

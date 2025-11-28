@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+import { API_URL } from './api';
 
 // API 요청시 인증 토큰을 자동으로 처리하는 유틸리티
 export async function fetchWithAuth(url: string, options: RequestInit = {}) {

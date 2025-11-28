@@ -3,8 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-
+import { API_URL } from '@/lib/api/utils';
 // name: 사용자 이름
 // email, password: 로그인에 사용될 계정 정보
 // phone: 전화번호 (선택사항)
@@ -18,6 +17,8 @@ export default function RegisterPage() {
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  console.log(API_URL);
 
   // 회원가입 폼 제출 시 실행되는 함수
   async function handleSubmit(e: React.FormEvent) {

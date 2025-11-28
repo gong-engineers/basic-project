@@ -4,6 +4,8 @@ import React from 'react';
 import type { cart, common } from '@basic-project/shared-types';
 import { client } from '../../../../lib/api';
 
+import { API_URL } from '@/lib/api/utils';
+
 interface CartItemProps {
   item: cart.CartInfoResponse;
   onQuantityChange: (cartId: number, newQuantity: number) => void;
@@ -56,7 +58,7 @@ export default function CartItem({
 
     try {
       await client.put<cart.CartUpdateRequest, common.ResponseDto<null>>(
-        `http://localhost:3001/api/v1/cart`,
+        `${API_URL}/api/v1/cart`,
         {
           cartId: item.cartId,
           quantity: newQuantity,
@@ -92,7 +94,7 @@ export default function CartItem({
     onDelete(cartId);
 
     try {
-      await client.delete(`http://localhost:3001/api/v1/cart/${cartId}`, null, {
+      await client.delete(`${API_URL}/api/v1/cart/${cartId}`, null, {
         mode: 'cors',
         credentials: 'include',
       });
