@@ -56,7 +56,7 @@ async function bootstrap() {
 
   // CORS 허용
   app.enableCors({
-    origin: corsOrigin ? corsOrigin.split(',') : '*', // 모든 도메인 허용
+    origin: corsOrigin ? corsOrigin.split(',') : 'http://localhost:3000', // 모든 도메인 허용
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS', 'PUT', 'HEAD'], // CORS 허용할 메소드 설정
