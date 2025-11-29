@@ -124,8 +124,7 @@ export default function Page() {
                         new Date(b.createdAt).getTime() -
                         new Date(a.createdAt).getTime(),
                     )
-                    .slice(-5)
-                    .reverse()
+                    .slice(0, 5)
                     .map((u) => (
                       <div
                         key={u.id}
@@ -165,8 +164,7 @@ export default function Page() {
                         new Date(b.createdAt).getTime() -
                         new Date(a.createdAt).getTime(),
                     )
-                    .slice(-5)
-                    .reverse()
+                    .slice(0, 5)
                     .map((p) => (
                       <div
                         key={p.id}

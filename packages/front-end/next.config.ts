@@ -7,6 +7,14 @@ const nextConfig: NextConfig = {
       'picsum.photos',
       'hebbkx1anhila5yf.public.blob.vercel-storage.com',
     ],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'basic-project-images.s3.us-east-1.amazonaws.com',
+        port: '',
+        pathname: '/*',
+      },
+    ],
   },
 };
 

@@ -173,3 +173,19 @@ async function reTakeToken(url: string, options: RequestInit, retry: boolean) {
     isRefreshing = false;
   }
 }
+
+export const getPresignedUrl = async (
+  fileType: string,
+): Promise<{ presignedUrl: string; fileUrl: string }> => {
+  return client.post(`${API_URL}/api/v1/products/presigned-url`, { fileType });
+};
+
+export const uploadToS3 = async (presignedUrl: string, file: File) => {
+  await fetch(presignedUrl, {
+    method: 'PUT',
+    body: file,
+    headers: {
+      'Content-Type': file.type,
+    },
+  });
+};

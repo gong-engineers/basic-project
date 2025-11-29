@@ -12,10 +12,17 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { GetProductDto } from './dto/get-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductService } from './product.service';
+import { CreatePresignedUrlDto } from './dto/create-presigned-url.dto';
 
 @Controller('api/v1/products')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
+
+  @Post('presigned-url')
+  async getPresignedUrl(@Body() createPresignedUrlDto: CreatePresignedUrlDto) {
+    const { fileType } = createPresignedUrlDto;
+    return this.productService.getPresignedUrl(fileType);
+  }
 
   @Post()
   createProduct(@Body() createProductDto: CreateProductDto) {
