@@ -40,7 +40,7 @@ export default function Page() {
             total: number;
             totalPages: number;
           }
-        >(`${API_URL}/api/v1/products`);
+        >(`${API_URL}/api/v1/products?limit=1000&page=1`);
         setProducts(response.items);
       } catch {}
     })();

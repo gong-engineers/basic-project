@@ -45,7 +45,7 @@ export default function Page() {
               total: number;
               totalPages: number;
             }
-          >(`${API_URL}/api/v1/products`),
+          >(`${API_URL}/api/v1/products?limit=1000&page=1`),
         ]);
         setUser(response[0]);
         setProduct(response[1].items);
@@ -119,12 +119,13 @@ export default function Page() {
               <CardContent>
                 <div className="space-y-3">
                   {user
-                    .slice(-5)
                     .sort(
                       (a, b) =>
                         new Date(b.createdAt).getTime() -
                         new Date(a.createdAt).getTime(),
                     )
+                    .slice(-5)
+                    .reverse()
                     .map((u) => (
                       <div
                         key={u.id}
@@ -159,12 +160,13 @@ export default function Page() {
               <CardContent>
                 <div className="space-y-3">
                   {product
-                    .slice(-5)
                     .sort(
                       (a, b) =>
                         new Date(b.createdAt).getTime() -
                         new Date(a.createdAt).getTime(),
                     )
+                    .slice(-5)
+                    .reverse()
                     .map((p) => (
                       <div
                         key={p.id}
