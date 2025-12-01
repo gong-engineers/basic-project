@@ -1,8 +1,8 @@
 import { client } from '@/lib/api';
+import { API_URL } from '@/lib/api/utils';
 import { checkDiscountPeriod } from '@/utils/date.util';
 import { convertCategory } from '@/utils/item.util';
 import { cart, common, item } from '@basic-project/shared-types';
-import { API_URL } from '@/lib/api/utils';
 
 export async function addToCart(product: item.Product, quantity: number) {
   const {

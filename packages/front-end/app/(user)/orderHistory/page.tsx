@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import type { common, order } from '@basic-project/shared-types';
 import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 import { client } from '../../../lib/api';
-import type { order, common } from '@basic-project/shared-types';
 import GroupOrderItem from './components/GroupOrderItem';
 
 // orderNumber로 그룹화된 주문 데이터 타입
@@ -198,7 +198,7 @@ export default function OrderHistory() {
               <p className="text-lg">주문 이력이 없습니다.</p>
               <button
                 onClick={() => router.push('/')}
-                className="mt-4 px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg"
+                className="mt-4 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
               >
                 쇼핑 시작하기
               </button>
