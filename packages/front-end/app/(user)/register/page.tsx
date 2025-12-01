@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 import { API_URL } from '@/lib/api/utils';
 // name: 사용자 이름
@@ -78,7 +78,7 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="text-sm mb-2 block text-sm font-medium text-gray-700">
+            <label className="mb-2 block text-sm font-medium text-gray-700">
               전화번호
             </label>
             <input
@@ -91,7 +91,7 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="text-sm mb-2 block text-sm font-medium text-gray-700">
+            <label className="mb-2 block text-sm font-medium text-gray-700">
               이메일
             </label>
             <input
@@ -105,7 +105,7 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="text-sm mb-2 block text-sm font-medium text-gray-700">
+            <label className="mb-2 block text-sm font-medium text-gray-700">
               비밀번호
             </label>
             <input
@@ -138,7 +138,7 @@ export default function RegisterPage() {
           <button
             type="button"
             onClick={() => router.push('/login')}
-            className="text-blue-600 hover:text-blue-800 font-medium"
+            className="text-blue-600 hover:text-blue-700 font-semibold"
           >
             로그인
           </button>
