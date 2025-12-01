@@ -5,6 +5,7 @@ import type { cart, common } from '@basic-project/shared-types';
 import { client } from '../../../../lib/api';
 
 import { API_URL } from '@/lib/api/utils';
+import Image from 'next/image';
 
 interface CartItemProps {
   item: cart.CartInfoResponse;
@@ -106,6 +107,8 @@ export default function CartItem({
     }
   };
 
+  console.log(item);
+
   return (
     <div className="w-full border border-gray-300 rounded-lg p-4 sm:p-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
@@ -137,7 +140,17 @@ export default function CartItem({
         {/* 상품 이미지 */}
         <div className="w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center bg-gray-100 rounded-lg shrink-0">
           <span className="text-4xl sm:text-5xl">
-            {item.thumbImage == null}📦
+            {item.thumbImage === null ? (
+              '📦'
+            ) : (
+              <Image
+                src={item.thumbImage}
+                alt={item.productName}
+                width={96}
+                height={96}
+                className="max-w-24 max-h-24 object-cover rounded-lg"
+              />
+            )}
           </span>
         </div>
 

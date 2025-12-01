@@ -40,6 +40,14 @@ export class Cart {
 
   @Column({
     type: 'varchar',
+    length: 255,
+    nullable: true,
+    comment: '장바구니 제품 썸네일 이미지',
+  })
+  thumbImage: string;
+
+  @Column({
+    type: 'varchar',
     length: 50,
     nullable: false,
     comment: '장바구니 제품 명',

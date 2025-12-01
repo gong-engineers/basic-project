@@ -31,6 +31,7 @@ export async function addToCart(product: item.Product, quantity: number) {
     productId: id,
     productName: name,
     price: unitPrice,
+    thumbImage: product.images ? product.images[0] : '',
     quantity,
     optionCheck: 'N', // 기본값
     optionId: 0, // 기본값

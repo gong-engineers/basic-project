@@ -5,6 +5,7 @@ export interface CartInRequest {
   productId: number;
   productName: string;
   price: number;
+  thumbImage: string;
   quantity: number;
   optionCheck: string;
   optionId: number;
@@ -37,7 +38,7 @@ export interface CartUpdateRequest {
   cartId: number;
   price: number;
   quantity: number;
-  optionCheck: "N" | "Y";
+  optionCheck: 'N' | 'Y';
   optionId: number | 0;
   optionName: string | null;
   optionPrice: number | 0;

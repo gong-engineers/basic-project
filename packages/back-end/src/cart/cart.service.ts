@@ -61,6 +61,7 @@ export class CartService {
           categoryName: cartInDto.categoryName,
           productId: cartInDto.productId,
           productName: cartInDto.productName,
+          thumbImage: cartInDto.thumbImage,
           price: cartInDto.price,
           quantity: cartInDto.quantity,
           optionCheck: cartInDto.optionCheck,

@@ -15,6 +15,11 @@ export class CartInDto implements cart.CartInRequest {
   @IsString()
   categoryName: string;
 
+  @ApiProperty({ description: '장바구니 제품 썸네일 이미지' })
+  @IsNotEmpty()
+  @IsString()
+  thumbImage: string;
+
   @ApiProperty({ description: '장바구니 제품 ID' })
   @IsNotEmpty()
   @IsNumber()
