@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import type { cart } from '@basic-project/shared-types';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 type DeliveryMethod = 'same-day' | 'standard';
 import { API_URL } from '@/lib/api/utils';
@@ -380,8 +380,8 @@ export default function Orders() {
       sessionStorage.removeItem('deliveryMethod');
       sessionStorage.removeItem('orderData');
 
-      // 홈으로 이동
-      router.push('/');
+      // 주문 내역으로 이동
+      router.push('/orderHistory');
     } catch (error) {
       console.error('결제 오류:', error);
       alert('결제 처리 중 오류가 발생했습니다. 다시 시도해주세요.');
@@ -459,7 +459,7 @@ export default function Orders() {
                 }}
               >
                 {/* 1단계: 배송지 정보 */}
-                <div className="w-full flex-shrink-0">
+                <div className="w-full shrink-0">
                   <div className="border border-blue-500 rounded-lg p-6">
                     <div className="flex items-center gap-2 mb-6">
                       <div className="w-2 h-2 rounded-full bg-red-500"></div>
@@ -537,7 +537,7 @@ export default function Orders() {
                       {/* 다음 단계로 버튼 */}
                       <button
                         onClick={handleNextStep}
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg"
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg"
                       >
                         다음 단계로
                       </button>
@@ -546,7 +546,7 @@ export default function Orders() {
                 </div>
 
                 {/* 2단계: 배송 방법 선택 */}
-                <div className="w-full flex-shrink-0 pl-4 sm:pl-6">
+                <div className="w-full shrink-0 pl-4 sm:pl-6">
                   <div className="border border-blue-500 rounded-lg p-6">
                     <div className="flex items-center gap-2 mb-6">
                       <div className="w-2 h-2 rounded-full bg-red-500"></div>
@@ -637,13 +637,13 @@ export default function Orders() {
                       <div className="flex gap-3">
                         <button
                           onClick={handlePrevStep}
-                          className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg border border-gray-300"
+                          className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-4 rounded-lg border border-gray-300"
                         >
                           이전 단계
                         </button>
                         <button
                           onClick={handleDeliveryMethodNext}
-                          className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg"
+                          className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg"
                         >
                           다음 단계로
                         </button>
@@ -653,7 +653,7 @@ export default function Orders() {
                 </div>
 
                 {/* 3단계: 결제 정보 입력 */}
-                <div className="w-full flex-shrink-0 pl-4 sm:pl-6">
+                <div className="w-full shrink-0 pl-4 sm:pl-6">
                   <div className="border border-blue-500 rounded-lg p-6">
                     <div className="flex items-center gap-2 mb-6">
                       <div className="w-2 h-2 rounded-full bg-red-500"></div>
@@ -855,14 +855,14 @@ export default function Orders() {
                         <button
                           onClick={handlePrevStep}
                           disabled={isSubmitting}
-                          className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-4 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           이전 단계
                         </button>
                         <button
                           onClick={handlePayment}
                           disabled={isSubmitting}
-                          className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           {isSubmitting ? '처리 중...' : '결제하기'}
                         </button>
@@ -875,7 +875,7 @@ export default function Orders() {
           </section>
 
           {/* 오른쪽: 주문 요약 */}
-          <section className="w-full lg:w-96 flex-shrink-0">
+          <section className="w-full lg:w-96 shrink-0">
             <div className="border border-gray-300 rounded-lg p-6">
               <h3 className="text-xl font-bold mb-6">주문 요약</h3>
 

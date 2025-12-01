@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
 import type { cart, common } from '@basic-project/shared-types';
 import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 import { client } from '../../../lib/api';
 import CartItem from './components/CartItem';
 
@@ -75,19 +75,17 @@ export default function Carts() {
   };
 
   // 체크박스 토글 핸들러
-  const handleToggleSelect =
-    (cartId: number, price: number, optionPrice: number, quantity: number) =>
-    () => {
-      setSelectedItems((prev) => {
-        const newSet = new Set(prev);
-        if (newSet.has(cartId)) {
-          newSet.delete(cartId);
-        } else {
-          newSet.add(cartId);
-        }
-        return newSet;
-      });
-    };
+  const handleToggleSelect = (cartId: number) => () => {
+    setSelectedItems((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(cartId)) {
+        newSet.delete(cartId);
+      } else {
+        newSet.add(cartId);
+      }
+      return newSet;
+    });
+  };
 
   // 결제하기 버튼 핸들러
   const handleCheckout = () => {
@@ -164,7 +162,7 @@ export default function Carts() {
           </section>
 
           {/* 오른쪽: 주문 요약 */}
-          <section className="w-full lg:w-96 flex-shrink-0">
+          <section className="w-full lg:w-96 shrink-0">
             <div className="border border-gray-300 rounded-lg p-4 sm:p-6 lg:sticky lg:top-4">
               <h3 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6">
                 주문 요약
@@ -204,17 +202,13 @@ export default function Carts() {
                 <button
                   onClick={handleCheckout}
                   disabled={cartList.length === 0}
-                  style={{
-                    backgroundColor: cartList.length === 0 ? '#ccc' : '#007bff',
-                    cursor: cartList.length === 0 ? 'not-allowed' : 'pointer',
-                  }}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 sm:py-3 px-4 rounded-lg flex items-center justify-center gap-2 text-sm sm:text-base"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 sm:py-3 px-4 rounded-lg flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed"
                 >
                   결제하기 →
                 </button>
                 <button
                   onClick={() => router.push('/')}
-                  className="w-full border border-gray-300 hover:bg-gray-50 font-medium py-2.5 sm:py-3 px-4 rounded-lg text-sm sm:text-base"
+                  className="w-full border bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-300 font-semibold py-2.5 sm:py-3 px-4 rounded-lg text-sm sm:text-base"
                 >
                   계속 쇼핑
                 </button>

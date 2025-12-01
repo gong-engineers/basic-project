@@ -135,7 +135,7 @@ export default function CartItem({
         </div>
 
         {/* 상품 이미지 */}
-        <div className="w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center bg-gray-100 rounded-lg flex-shrink-0">
+        <div className="w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center bg-gray-100 rounded-lg shrink-0">
           <span className="text-4xl sm:text-5xl">
             {item.thumbImage == null}📦
           </span>

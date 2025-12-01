@@ -1,6 +1,5 @@
 import { convertCategory } from '@/utils/item.util';
 import { Categories } from '@basic-project/shared-types/item';
-import Link from 'next/link';
 
 export default function Footer() {
   const categories = Categories.map(convertCategory);
