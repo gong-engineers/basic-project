@@ -132,7 +132,7 @@ let retryQueue: {
 }[] = [];
 
 // 토큰 재발급 함수
-async function reTakeToken(url: string, options: RequestInit, retry: boolean) {
+async function reTakeToken(url: string, options: RequestInit) {
   try {
     // RefreshToken 재발급 요청
     const refreshResponse = await fetch(`${API_URL}/auth/refresh`, {

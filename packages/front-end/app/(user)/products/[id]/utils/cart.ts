@@ -46,9 +46,7 @@ export async function addToCart(product: item.Product, quantity: number) {
     >(`${API_URL}/api/v1/cart`, body, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: localStorage.getItem('accessToken') || '',
       },
-      mode: 'cors',
       credentials: 'include',
     });
 

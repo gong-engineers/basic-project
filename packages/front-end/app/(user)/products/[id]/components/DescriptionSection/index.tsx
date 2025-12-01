@@ -1,7 +1,6 @@
 'use client';
 
 import { useAuthStore } from '@/stores/authStore';
-import { isAuthError } from '@/utils/auth.util';
 import { checkDiscountPeriod, formatDatePeriod } from '@/utils/date.util';
 import { normalizeError } from '@/utils/error.util';
 import { convertCategory } from '@/utils/item.util';
@@ -54,6 +53,11 @@ function DescriptionSection(props: Props) {
   };
 
   const handleAddToCart = async () => {
+    if (!isLoggedIn) {
+      toast.error((t) => <NeedLoginToast t={t} />, { duration: Infinity });
+      return;
+    }
+
     try {
       await addToCart(props.product, quantity);
 
@@ -61,11 +65,6 @@ function DescriptionSection(props: Props) {
       router.push('/carts');
     } catch (err) {
       const error = normalizeError(err);
-
-      if (isAuthError(error)) {
-        toast.error((t) => <NeedLoginToast t={t} />, { duration: Infinity });
-        return;
-      }
 
       toast.error(error.message, { duration: 5000 });
     }
@@ -130,13 +129,13 @@ function DescriptionSection(props: Props) {
       <div className="flex flex-col gap-2">
         <button
           onClick={handleAddToCart}
-          className="w-full bg-blue-600 text-white rounded-sm h-10 font-semibold cursor-pointer"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-sm h-10 font-semibold cursor-pointer"
         >
           🛒 장바구니 담기
         </button>
         <button
           onClick={handleBuyNow}
-          className="w-full bg-green-600 text-white rounded-sm h-10 font-semibold cursor-pointer"
+          className="w-full bg-green-600 hover:bg-green-700 text-white rounded-sm h-10 font-semibold cursor-pointer"
         >
           바로 구매
         </button>
