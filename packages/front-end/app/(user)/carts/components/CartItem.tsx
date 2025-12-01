@@ -95,10 +95,14 @@ export default function CartItem({
     onDelete(cartId);
 
     try {
-      await client.delete(`${API_URL}/api/v1/cart/${cartId}`, null, {
-        mode: 'cors',
-        credentials: 'include',
-      });
+      await client.delete(
+        `${API_URL}/api/v1/cart/${cartId}`,
+        {},
+        {
+          mode: 'cors',
+          credentials: 'include',
+        },
+      );
     } catch (err) {
       console.error('장바구니 삭제 실패:', err);
       // 실패해도 이미 UI에서 제거되었으므로 롤백 하지 않음
