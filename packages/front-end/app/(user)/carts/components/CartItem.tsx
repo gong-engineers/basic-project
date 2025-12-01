@@ -107,8 +107,6 @@ export default function CartItem({
     }
   };
 
-  console.log(item);
-
   return (
     <div className="w-full border border-gray-300 rounded-lg p-4 sm:p-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
